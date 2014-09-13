@@ -14,6 +14,7 @@ class RainforestInfoCardCell: UICollectionViewCell {
   var featureImageView: UIImageView!
   var backgroundImageView: UIImageView!
   var backgroundGradientLayer: CAGradientLayer!
+  let textAreaHeight: CGFloat = 300.0
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -29,12 +30,6 @@ class RainforestInfoCardCell: UICollectionViewCell {
     
     constructViewHierarchy()
     
-    // TODO: Add shadow
-    titleLabel.textColor = UIColor.whiteColor()
-    titleLabel.font = UIFont(name: "AvenirNext-Heavy", size: 30)
-    titleLabel.shadowColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.3)
-    titleLabel.shadowOffset = CGSize(width: 0, height: 2)
-    
     backgroundImageView.contentMode = .ScaleAspectFill
     
     featureImageView.contentMode = UIViewContentMode.ScaleAspectFit
@@ -43,20 +38,9 @@ class RainforestInfoCardCell: UICollectionViewCell {
     featureImageView.layer.shadowColor = UIColor.blackColor().CGColor
     featureImageView.layer.shadowRadius = 2
     
-    
-    // TODO: Add shadow
-//    var shadow = NSShadow()
-//    shadow.shadowColor = UIColor(white: 0.0, alpha: 0.8)
-//    shadow.shadowOffset = CGSize(width: 1, height: 3)
-//    shadow.shadowBlurRadius = 2.0
-    
-    descriptionTextView.font = UIFont(name: "AvenirNext-Medium", size: 16)
     descriptionTextView.textAlignment = .Justified
-    descriptionTextView.textColor = UIColor.whiteColor()
     descriptionTextView.backgroundColor = UIColor.clearColor()
     descriptionTextView.scrollEnabled = false
-    
-//    descriptionTextView.textContainer.exclusionPaths = [UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 90, height: 90), byRoundingCorners: UIRectCorner.AllCorners, cornerRadii: CGSize(width: 40, height: 40))]
     
     backgroundGradientLayer = CAGradientLayer()
     backgroundGradientLayer.backgroundColor = UIColor.clearColor().CGColor
@@ -78,8 +62,7 @@ class RainforestInfoCardCell: UICollectionViewCell {
   
   override func sizeThatFits(size: CGSize) -> CGSize {
     if let featureImageViewFrame = featureImageViewFrameWithWidth(size.width) {
-      let descriptionTextViewFrame = descriptionTextViewFrameWithWidth(size.width, featureImageViewFrame: featureImageViewFrame)
-      return CGSize(width: size.width, height: descriptionTextViewFrame.maxY + 20.0)
+      return CGSize(width: size.width, height: featureImageViewFrame.maxY + textAreaHeight)
     }
     return CGSize(width: size.width, height: 10.0)
   }
@@ -101,9 +84,9 @@ class RainforestInfoCardCell: UICollectionViewCell {
     backgroundGradientLayer.frame = featureImageView.bounds
     contentView.layer.insertSublayer(backgroundGradientLayer, above: featureImageView.layer)
     
-    titleLabel.frame = CGRectInset(CGRectMake(0, featureImageView.frame.maxY - 70.0, self.bounds.width, 70), 20, 20)
+    titleLabel.frame = CGRectInset(CGRectMake(0, featureImageView.frame.maxY - 80.0, self.bounds.width, 80), 20, 20)
     
-    descriptionTextView.frame = descriptionTextViewFrameWithWidth(self.bounds.width, featureImageViewFrame: featureImageView.frame)
+    descriptionTextView.frame = CGRectMake(10.0, featureImageView.frame.maxY + 20.0, self.bounds.width - 20.0, textAreaHeight)
   }
   
   
@@ -116,10 +99,24 @@ class RainforestInfoCardCell: UICollectionViewCell {
     return nil
   }
   
-  func descriptionTextViewFrameWithWidth(width: CGFloat, featureImageViewFrame: CGRect) -> CGRect {
-    let margin: CGFloat = 20.0
-    let insetWidth: CGFloat = width - margin
-    let textViewHeight = descriptionTextView.sizeThatFits(CGSize(width: insetWidth, height: CGFloat(FLT_MAX)))
-    return CGRectMake(margin/2.0, featureImageViewFrame.height + margin, insetWidth, textViewHeight.height)
+  func updateTitle(title: String, andDescription description: NSString) {
+    var titleTextShadow = NSShadow()
+    titleTextShadow.shadowColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.3)
+    titleTextShadow.shadowOffset = CGSize(width: 0, height: 2)
+    titleTextShadow.shadowBlurRadius = 3.0
+    
+    
+    var descriptionTextShadow = NSShadow()
+    descriptionTextShadow.shadowColor = UIColor(white: 0.0, alpha: 0.3)
+    descriptionTextShadow.shadowOffset = CGSize(width: 0, height: 1)
+    descriptionTextShadow.shadowBlurRadius = 3.0
+    
+    
+    let titleAttributes = [NSFontAttributeName: UIFont(name: "AvenirNext-Heavy", size: 30), NSForegroundColorAttributeName: UIColor.whiteColor(), NSShadowAttributeName: titleTextShadow]
+    titleLabel.attributedText = NSAttributedString(string: title, attributes: titleAttributes)
+    
+    let descriptionAttributes = [NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16), NSShadowAttributeName: descriptionTextShadow, NSForegroundColorAttributeName: UIColor.whiteColor(), NSBackgroundColorAttributeName: UIColor.clearColor()]
+    descriptionTextView.attributedText = NSAttributedString(string: description, attributes: descriptionAttributes)
   }
+  
 }
