@@ -16,6 +16,8 @@ class RainforestInfoCardCell: UICollectionViewCell {
   var backgroundGradientLayer: CAGradientLayer!
   let textAreaHeight: CGFloat = 300.0
   
+  var backgroundImageNode: ASImageNode!
+  
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
@@ -25,8 +27,10 @@ class RainforestInfoCardCell: UICollectionViewCell {
     titleLabel = UILabel(frame: CGRectZero)
     descriptionTextView = UITextView()
     featureImageView = UIImageView()
-    
+   
     backgroundImageView = UIImageView()
+    backgroundImageNode = ASImageNode()
+    backgroundImageNode.imageModificationBlock = { input in return input.applyLightEffect() }
     
     constructViewHierarchy()
     
@@ -54,7 +58,8 @@ class RainforestInfoCardCell: UICollectionViewCell {
   }
   
   func constructViewHierarchy() {
-    contentView.addSubview(backgroundImageView)
+//    contentView.addSubview(backgroundImageView)
+    contentView.addSubview(backgroundImageNode.view)
     contentView.addSubview(featureImageView)
     contentView.addSubview(titleLabel)
     contentView.addSubview(descriptionTextView)
@@ -72,6 +77,7 @@ class RainforestInfoCardCell: UICollectionViewCell {
     super.layoutSubviews()
     
     backgroundImageView.frame = bounds
+    backgroundImageNode.frame = bounds
     
     if let featureImageViewFrame = featureImageViewFrameWithWidth(self.bounds.width) {
       featureImageView.frame = featureImageViewFrame
@@ -87,6 +93,12 @@ class RainforestInfoCardCell: UICollectionViewCell {
     titleLabel.frame = CGRectInset(CGRectMake(0, featureImageView.frame.maxY - 80.0, self.bounds.width, 80), 20, 20)
     
     descriptionTextView.frame = CGRectMake(10.0, featureImageView.frame.maxY + 20.0, self.bounds.width - 20.0, textAreaHeight)
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    // TODO: Cancel expensive operations.
+    backgroundImageNode.hidden = true
   }
   
   
