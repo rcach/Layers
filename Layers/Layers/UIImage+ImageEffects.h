@@ -95,6 +95,8 @@
 
 @import UIKit;
 
+@class ASDisplayNode;
+
 @interface UIImage (ImageEffects)
 
 - (UIImage *)applyLightEffect;
@@ -103,5 +105,6 @@
 - (UIImage *)applyTintEffectWithColor:(UIColor *)tintColor;
 
 - (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage;
+- (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage node:(ASDisplayNode *)node;
 
 @end
