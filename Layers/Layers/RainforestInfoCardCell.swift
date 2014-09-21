@@ -10,15 +10,16 @@ import UIKit
 
 class RainforestInfoCardCell: UICollectionViewCell {
   var nodeConstructionOperation: NSBlockOperation?
-  var titleLabel: UILabel!
   
   var featureImageOptional: UIImage?
   
   var contentNode: ASDisplayNode?
   var backgroundBlurNode: ASImageNode?
   
-  var backgroundGradientLayer: CAGradientLayer!
   let textAreaHeight: CGFloat = 300.0
+  
+  var contentLayer: CALayer?
+  
   
   required init(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -26,24 +27,6 @@ class RainforestInfoCardCell: UICollectionViewCell {
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    
-    titleLabel = UILabel(frame: CGRectZero)
-    
-//    featureImageNode.layer.shadowOffset = CGSizeMake(0, 2)
-//    featureImageNode.layer.shadowOpacity = 0.5
-//    featureImageNode.layer.shadowColor = UIColor.blackColor().CGColor
-//    featureImageNode.layer.shadowRadius = 2
-    
-//    backgroundGradientLayer = CAGradientLayer()
-//    backgroundGradientLayer.backgroundColor = UIColor.clearColor().CGColor
-//    backgroundGradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
-//    backgroundGradientLayer.endPoint = CGPoint(x: 0.5, y: 0)
-//    let arrayColors: [AnyObject] = [
-//      UIColor(white: 0, alpha: 0.6).CGColor,
-//      UIColor(white: 0, alpha: 0)
-//    ]
-//    backgroundGradientLayer.colors = arrayColors
-    
   }
 
   
@@ -57,24 +40,18 @@ class RainforestInfoCardCell: UICollectionViewCell {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-
-//    backgroundGradientLayer.frame = featureImageNode.bounds
-//    contentView.layer.insertSublayer(backgroundGradientLayer, above: featureImageNode.layer)
-    
-//    titleLabel.frame = CGRectInset(CGRectMake(0, featureImageNode.frame.maxY - 80.0, contentNode.bounds.width, 80), 20, 20)
   }
   
   override func prepareForReuse() {
     super.prepareForReuse()
     // TODO: Cancel expensive operations.
-//    backgroundImageNode.hidden = true
-//    featureImageNode.hidden = true
     contentNode?.recursiveSetPreventOrCancelDisplay(true)
     backgroundBlurNode?.preventOrCancelDisplay = true
     if let operation = nodeConstructionOperation {
       operation.cancel()
     }
-    contentNode?.layer.removeFromSuperlayer()
+    contentLayer?.removeFromSuperlayer()
+    contentLayer = nil
     contentNode = nil
   }
   
@@ -86,6 +63,79 @@ class RainforestInfoCardCell: UICollectionViewCell {
       return CGRectMake(0, 0, width, height)
     }
     return nil
+  }
+  
+  
+  func nodeConstructionOperationWithLifeform(lifeform: RainforestLifeform) -> NSOperation {
+    let nodeConstructionOperation = NSBlockOperation()
+    nodeConstructionOperation.addExecutionBlock { [unowned nodeConstructionOperation, weak self] in
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      if self == nil {
+        return
+      }
+      if NSThread.isMainThread() {
+        return
+      }
+      
+      // TODO: Does Swift automatically promote weak capture var to Strong?
+      let realCell = self!
+      let lifeformImage = UIImage(named: lifeform.imageName)
+      
+      let featureImageNode = NodeFactory.createNewFeatureImageNodeWithImage(lifeformImage)
+      let backgroundImageNode = NodeFactory.createNewBackgroundImageNodeWithImage(lifeformImage)
+      let descriptionTextNode = NodeFactory.createNewDescriptionNodeWithString(lifeform.description)
+      let titleTextNode = NodeFactory.createNewTitleNodeWithString(lifeform.name)
+      let gradientNode = NodeFactory.createNewGradientNode()
+      
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      
+      let contentNode = NodeFactory.createNewContentNode()
+      contentNode.addSubnode(backgroundImageNode)
+      contentNode.addSubnode(featureImageNode)
+      contentNode.addSubnode(gradientNode)
+      contentNode.addSubnode(titleTextNode)
+      contentNode.addSubnode(descriptionTextNode)
+      
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      
+      NodeFramesetter.layOutRainforestInfoCardNodeHierarchy(contentNode: contentNode, backgroundImageNode: backgroundImageNode, featureImageNode: featureImageNode, gradientNode: gradientNode, titleTextNode: titleTextNode, descriptionTextNode: descriptionTextNode)
+      
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      
+      dispatch_async(dispatch_get_main_queue()) { [nodeConstructionOperation, realCell] in
+        if nodeConstructionOperation.cancelled {
+          return
+        }
+        if realCell.nodeConstructionOperation !== nodeConstructionOperation {
+          return
+        }
+        realCell.contentNode = contentNode
+        realCell.backgroundBlurNode = backgroundImageNode
+        realCell.contentLayer = contentNode.layer
+        realCell.contentView.layer.addSublayer(realCell.contentLayer)
+        contentNode.layer.setNeedsDisplay()
+      }
+      
+    }
+    // TODO: Method doesn't say that this assignment happens.
+    self.nodeConstructionOperation = nodeConstructionOperation
+    return nodeConstructionOperation
+  }
+  
+  func removeAllContentViewSublayers() {
+    if let sublayers = self.contentView.layer.sublayers {
+      for layer in sublayers as [CALayer] {
+        layer.removeFromSuperlayer()
+      }
+    }
   }
   
 }

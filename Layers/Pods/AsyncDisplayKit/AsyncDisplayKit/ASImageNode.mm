@@ -175,7 +175,7 @@
 + (UIImage *)displayWithParameters:(_ASImageNodeDrawParameters *)parameters isCancelled:(asdisplaynode_iscancelled_block_t)isCancelled
 {
   UIImage *image = parameters.image;
-
+  
   if (!image) {
     return nil;
   }
@@ -249,7 +249,9 @@
     return nil;
   }
 
+
   UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+
 
   UIGraphicsEndImageContext();
 
