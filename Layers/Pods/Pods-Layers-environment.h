@@ -13,8 +13,8 @@
 // Please contact the author.
 // Version: 1.0beta.
 
-// AsyncDisplayKit/no-arc
-#define COCOAPODS_POD_AVAILABLE_AsyncDisplayKit_no_arc
+// AsyncDisplayKit/ASDealloc2MainObject
+#define COCOAPODS_POD_AVAILABLE_AsyncDisplayKit_ASDealloc2MainObject
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
