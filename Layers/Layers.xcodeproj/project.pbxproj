@@ -12,6 +12,7 @@
 		20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE419CF36B400E363A8 /* LAGradientNode.mm */; };
 		20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE619CF467700E363A8 /* NodeFactory.swift */; };
 		20101BE919CF4E9300E363A8 /* NodeFramesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */; };
+		203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */; };
 		2061348F19B53BE200888CAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061348E19B53BE200888CAB /* AppDelegate.swift */; };
 		2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061349019B53BE200888CAB /* RainforestViewController.swift */; };
 		2061349419B53BE200888CAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2061349219B53BE200888CAB /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 		20101BE419CF36B400E363A8 /* LAGradientNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LAGradientNode.mm; sourceTree = "<group>"; };
 		20101BE619CF467700E363A8 /* NodeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFactory.swift; sourceTree = "<group>"; };
 		20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFramesetter.swift; sourceTree = "<group>"; };
+		203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2061348919B53BE200888CAB /* Layers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Layers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2061348D19B53BE200888CAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2061348E19B53BE200888CAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */,
 				2061348E19B53BE200888CAB /* AppDelegate.swift */,
 				2061349019B53BE200888CAB /* RainforestViewController.swift */,
+				203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */,
 				20101BE119CF2E7900E363A8 /* RainforestLifeform.swift */,
 				206134AB19B53F8000888CAB /* RainforestInfoCardCell.swift */,
 				20101BE619CF467700E363A8 /* NodeFactory.swift */,
@@ -296,6 +299,7 @@
 				206134AC19B53F8000888CAB /* RainforestInfoCardCell.swift in Sources */,
 				207A0E6A19C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m in Sources */,
 				20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */,
+				203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

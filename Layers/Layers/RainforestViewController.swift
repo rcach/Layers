@@ -16,8 +16,8 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
   override func viewDidLoad() {
     super.viewDidLoad()
     nodeConstructionQueue.maxConcurrentOperationCount = 1
-    let flowLayout = collectionView?.collectionViewLayout as UICollectionViewFlowLayout
-    flowLayout.estimatedItemSize = CGSize(width: 320.0, height: 600.0)
+//    let flowLayout = collectionView?.collectionViewLayout as UICollectionViewFlowLayout
+//    flowLayout.estimatedItemSize = CGSize(width: 320.0, height: 600.0)
     // Do any additional setup after loading the view, typically from a nib.
   }
 
