@@ -19,6 +19,7 @@ class RainforestInfoCardCell: UICollectionViewCell {
   let textAreaHeight: CGFloat = 300.0
   
   var contentLayer: CALayer?
+  var placeholderLayer: CALayer?
   
   
   required init(coder aDecoder: NSCoder) {
@@ -27,9 +28,12 @@ class RainforestInfoCardCell: UICollectionViewCell {
   
   override func awakeFromNib() {
     super.awakeFromNib()
+    self.contentView.backgroundColor = UIColor.greenColor()
+    self.placeholderLayer = CALayer()
+    self.placeholderLayer?.backgroundColor = UIColor.redColor().CGColor
+    self.contentView.layer.addSublayer(self.placeholderLayer)
   }
 
-  
   override func sizeThatFits(size: CGSize) -> CGSize {
     if let featureImageViewFrame = featureImageViewFrameWithWidth(size.width) {
       return CGSize(width: size.width, height: featureImageViewFrame.maxY + textAreaHeight)
@@ -37,9 +41,12 @@ class RainforestInfoCardCell: UICollectionViewCell {
     return CGSize(width: size.width, height: 10.0)
   }
   
-  
   override func layoutSubviews() {
     super.layoutSubviews()
+    CATransaction.begin()
+    CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+    self.placeholderLayer?.frame = self.bounds
+    CATransaction.commit()
   }
   
   override func prepareForReuse() {
@@ -54,7 +61,6 @@ class RainforestInfoCardCell: UICollectionViewCell {
     contentLayer = nil
     contentNode = nil
   }
-  
   
   func featureImageViewFrameWithWidth(width: CGFloat) -> CGRect? {
     // TODO: Handle 1.0 scale.
@@ -133,7 +139,9 @@ class RainforestInfoCardCell: UICollectionViewCell {
   func removeAllContentViewSublayers() {
     if let sublayers = self.contentView.layer.sublayers {
       for layer in sublayers as [CALayer] {
-        layer.removeFromSuperlayer()
+        if layer !== self.placeholderLayer {
+          layer.removeFromSuperlayer()
+        }
       }
     }
   }
