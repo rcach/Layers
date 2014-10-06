@@ -15,6 +15,7 @@ protocol RainforestLayoutMetrics {
   func columnForItemAtIndex(index: Int) -> Int
   func indexForItemAboveItemAtIndex(index: Int) -> Int
   func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int
+  func interCellHorizontalSpacing() -> Int
 }
 
 class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
@@ -46,6 +47,10 @@ class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
   func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int {
     return horizontalSpacing + cellWidth + horizontalSpacing + cellWidth + horizontalSpacing
   }
+  
+  func interCellHorizontalSpacing() -> Int {
+    return 20
+  }
 }
 
 
@@ -71,6 +76,10 @@ class OneColumnLayoutMetrics: RainforestLayoutMetrics {
   func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int {
     return horizontalSpacing + cellWidth + horizontalSpacing
   }
+  
+  func interCellHorizontalSpacing() -> Int {
+    return 0
+  }
 }
 
 enum RainforestLayoutType {
@@ -92,9 +101,9 @@ enum RainforestLayoutType {
 public class RainforestCollectionViewLayout: UICollectionViewLayout {
   var allLayoutAttributes = [UICollectionViewLayoutAttributes]()
   let cellDefaultHeight = 10
-  let cellWidth = 280
+  let cellWidth = 320
   // TODO: Turn this into a struct.
-  let interCellHorizontalSpacing = 20
+//  let interCellHorizontalSpacing = 20
   let interCellVerticalSpacing = 10
   var contentMaxY: CGFloat = 0
   let layoutType: RainforestLayoutType
@@ -136,7 +145,7 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
       let la = UICollectionViewLayoutAttributes(forCellWithIndexPath: NSIndexPath(forItem: i, inSection: 0))
       let row = self.layoutMetrics.rowForItemAtIndex(i)
       let column = self.layoutMetrics.columnForItemAtIndex(i)
-      let x = (column * self.cellWidth) + (self.interCellHorizontalSpacing * (column + 1))
+      let x = (column * self.cellWidth) + (self.layoutMetrics.interCellHorizontalSpacing() * (column + 1))
       let y = (row * self.cellDefaultHeight) + (self.interCellVerticalSpacing * (row + 1))
       la.frame = CGRect(x: x, y: y, width: self.cellWidth, height: self.cellDefaultHeight)
       self.allLayoutAttributes.append(la)
@@ -153,7 +162,7 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
     let collectionView = self.collectionView!
     
 //    println("\n\n CALCULATED CONTENT SIZE: \(CGSize(width: 660, height: height)) \n\n ")
-    let contentWidth = self.layoutMetrics.contentWidth(self.cellWidth, horizontalSpacing: self.interCellHorizontalSpacing)
+    let contentWidth = self.layoutMetrics.contentWidth(self.cellWidth, horizontalSpacing: self.layoutMetrics.interCellHorizontalSpacing())
     return CGSize(width: contentWidth, height: Int(self.contentMaxY))
   }
   
@@ -186,7 +195,7 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
 //      println("Cell at i4, above la: \n \(layoutAttributesForItemAbove) \n\n ")
 //    }
     
-    if originalAttributes.indexPath.item > 1 {
+    if originalAttributes.indexPath.item != indexForItemAbove {
       preferredAttributes.frame.origin.y = layoutAttributesForItemAbove.frame.maxY + CGFloat(self.interCellVerticalSpacing)
     } else {
       preferredAttributes.frame.origin.y = 0
@@ -194,10 +203,10 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
     
     self.allLayoutAttributes[originalAttributes.indexPath.item] = preferredAttributes
 
-//    if originalAttributes.indexPath.item == 9 {
-//      println(self.allLayoutAttributes)
+    if originalAttributes.indexPath.item == 9 {
+      println(self.allLayoutAttributes)
 //      println("\n\n ACTUAL CONTENT SIZE: \(self.collectionView?.contentSize) \n\n ")
-//    }
+    }
     
     let ic = super.invalidationContextForPreferredLayoutAttributes(preferredAttributes, withOriginalAttributes: originalAttributes)
     ic.invalidateItemsAtIndexPaths([originalAttributes.indexPath])

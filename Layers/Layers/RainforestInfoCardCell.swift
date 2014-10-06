@@ -30,7 +30,14 @@ class RainforestInfoCardCell: UICollectionViewCell {
     super.awakeFromNib()
     self.contentView.backgroundColor = UIColor.greenColor()
     self.placeholderLayer = CALayer()
-    self.placeholderLayer?.backgroundColor = UIColor.redColor().CGColor
+    
+    
+    let placeholderImage = UIImage(named: "placeholder").resizableImageWithCapInsets(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
+    self.placeholderLayer?.contents = placeholderImage.CGImage
+    self.placeholderLayer?.contentsGravity = kCAGravityCenter
+    self.placeholderLayer?.contentsScale = UIScreen.mainScreen().scale
+    self.placeholderLayer?.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
+    
     self.contentView.layer.addSublayer(self.placeholderLayer)
   }
 
