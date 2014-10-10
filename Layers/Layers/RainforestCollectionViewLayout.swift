@@ -122,7 +122,7 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
   }
   
   required public init(coder aDecoder: NSCoder) {
-    self.layoutType = .OneColumn
+    self.layoutType = .TwoColumn
     self.layoutMetrics = self.layoutType.metrics()
     super.init(coder: aDecoder)
   }

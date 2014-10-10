@@ -87,12 +87,14 @@
   ASDisplayNodeAsyncTransactionOperation *operation = [[ASDisplayNodeAsyncTransactionOperation alloc] initWithOperationCompletionBlock:completion];
   [_operations addObject:operation];
   dispatch_group_async(_group, queue, ^{
-    if (_state != ASAsyncTransactionStateCanceled) {
-      dispatch_group_enter(_group);
-      block(^(id<NSObject> value){
-        operation.value = value;
-        dispatch_group_leave(_group);
-      });
+    @autoreleasepool {
+      if (_state != ASAsyncTransactionStateCanceled) {
+        dispatch_group_enter(_group);
+        block(^(id<NSObject> value){
+          operation.value = value;
+          dispatch_group_leave(_group);
+        });
+      }
     }
   });
 }
@@ -109,9 +111,9 @@
   ASDisplayNodeAsyncTransactionOperation *operation = [[ASDisplayNodeAsyncTransactionOperation alloc] initWithOperationCompletionBlock:completion];
   [_operations addObject:operation];
   dispatch_group_async(_group, queue, ^{
-    if (_state != ASAsyncTransactionStateCanceled) {
-      @autoreleasepool {
-        operation.value = block();
+    @autoreleasepool {
+      if (_state != ASAsyncTransactionStateCanceled) {
+          operation.value = block();
       }
     }
   });

@@ -1,5 +1,5 @@
 //
-//  RainforestInfoCardCell.swift
+//  RainforestCardCell.swift
 //  Layers
 //
 //  Created by René Cacheaux on 9/1/14.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class RainforestInfoCardCell: UICollectionViewCell {
+class RainforestCardCell: UICollectionViewCell {
   var nodeConstructionOperation: NSBlockOperation?
   
-  var featureImageOptional: UIImage?
+  var featureImageSizeOptional: CGSize?
   
   var contentNode: ASDisplayNode?
   var backgroundBlurNode: ASImageNode?
@@ -21,43 +21,63 @@ class RainforestInfoCardCell: UICollectionViewCell {
   var contentLayer: CALayer?
   var placeholderLayer: CALayer?
   
+  var cardView: RainforestCardView
   
   required init(coder aDecoder: NSCoder) {
+    cardView = RainforestCardView()
     super.init(coder: aDecoder)
   }
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    self.contentView.backgroundColor = UIColor.greenColor()
+    
     self.placeholderLayer = CALayer()
-    
-    
-    let placeholderImage = UIImage(named: "placeholder").resizableImageWithCapInsets(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
-    self.placeholderLayer?.contents = placeholderImage.CGImage
+    self.placeholderLayer?.contents = UIImage(named: "placeholder").CGImage
     self.placeholderLayer?.contentsGravity = kCAGravityCenter
     self.placeholderLayer?.contentsScale = UIScreen.mainScreen().scale
     self.placeholderLayer?.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
-    
     self.contentView.layer.addSublayer(self.placeholderLayer)
   }
 
+  //MARK: Layout
   override func sizeThatFits(size: CGSize) -> CGSize {
+    return threadSafeSizeThatFits(size)
+  }
+  
+  func threadSafeSizeThatFits(size: CGSize) -> CGSize {
     if let featureImageViewFrame = featureImageViewFrameWithWidth(size.width) {
       return CGSize(width: size.width, height: featureImageViewFrame.maxY + textAreaHeight)
+    } else {
+      return CGSize(width: size.width, height: 10.0)
     }
-    return CGSize(width: size.width, height: 10.0)
+  }
+  
+  func featureImageViewFrameWithWidth(width: CGFloat) -> CGRect? {
+    // TODO: Handle 1.0 scale.
+    if let imageSize = featureImageSizeOptional {
+      let height = (imageSize.height / imageSize.width) * width
+      return CGRectMake(0, 0, width, height)
+    }
+    return nil
   }
   
   override func layoutSubviews() {
     super.layoutSubviews()
+    
     CATransaction.begin()
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
     self.placeholderLayer?.frame = self.bounds
     CATransaction.commit()
   }
   
+  func layoutCellContent() {
+    
+  }
+  
+  //MARK: Cell Reuse
   override func prepareForReuse() {
     super.prepareForReuse()
+    
     // TODO: Cancel expensive operations.
     contentNode?.recursiveSetPreventOrCancelDisplay(true)
     backgroundBlurNode?.preventOrCancelDisplay = true
@@ -69,17 +89,19 @@ class RainforestInfoCardCell: UICollectionViewCell {
     contentNode = nil
   }
   
-  func featureImageViewFrameWithWidth(width: CGFloat) -> CGRect? {
-    // TODO: Handle 1.0 scale.
-    if let image = featureImageOptional {
-      let height = (image.size.height / image.size.width) * width
-      return CGRectMake(0, 0, width, height)
+  //TODO: Remove this method.
+  func removeAllContentViewSublayers() {
+    if let sublayers = self.contentView.layer.sublayers {
+      for layer in sublayers as [CALayer] {
+        if layer !== self.placeholderLayer {
+          layer.removeFromSuperlayer()
+        }
+      }
     }
-    return nil
   }
   
-  
-  func nodeConstructionOperationWithLifeform(lifeform: RainforestLifeform) -> NSOperation {
+  //MARK: Nodes
+  func nodeConstructionOperationWithLifeform(lifeform: RainforestCardInfo) -> NSOperation {
     let nodeConstructionOperation = NSBlockOperation()
     nodeConstructionOperation.addExecutionBlock { [unowned nodeConstructionOperation, weak self] in
       if nodeConstructionOperation.cancelled {
@@ -142,15 +164,5 @@ class RainforestInfoCardCell: UICollectionViewCell {
     self.nodeConstructionOperation = nodeConstructionOperation
     return nodeConstructionOperation
   }
-  
-  func removeAllContentViewSublayers() {
-    if let sublayers = self.contentView.layer.sublayers {
-      for layer in sublayers as [CALayer] {
-        if layer !== self.placeholderLayer {
-          layer.removeFromSuperlayer()
-        }
-      }
-    }
-  }
-  
+
 }

@@ -8,37 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		0D5336B43557439EB31EADCF /* libPods-Layers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A16CEE3C744E318A68991B /* libPods-Layers.a */; };
-		20101BE219CF2E7900E363A8 /* RainforestLifeform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE119CF2E7900E363A8 /* RainforestLifeform.swift */; };
+		20101BE219CF2E7900E363A8 /* RainforestCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE119CF2E7900E363A8 /* RainforestCardInfo.swift */; };
 		20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE419CF36B400E363A8 /* LAGradientNode.mm */; };
 		20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE619CF467700E363A8 /* NodeFactory.swift */; };
 		20101BE919CF4E9300E363A8 /* NodeFramesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */; };
+		202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */; };
 		203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */; };
 		2061348F19B53BE200888CAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061348E19B53BE200888CAB /* AppDelegate.swift */; };
 		2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061349019B53BE200888CAB /* RainforestViewController.swift */; };
 		2061349419B53BE200888CAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2061349219B53BE200888CAB /* Main.storyboard */; };
 		2061349619B53BE200888CAB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2061349519B53BE200888CAB /* Images.xcassets */; };
-		206134A219B53BE200888CAB /* LayersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206134A119B53BE200888CAB /* LayersTests.swift */; };
-		206134AC19B53F8000888CAB /* RainforestInfoCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206134AB19B53F8000888CAB /* RainforestInfoCardCell.swift */; };
+		206134AC19B53F8000888CAB /* RainforestCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206134AB19B53F8000888CAB /* RainforestCardCell.swift */; };
 		207A0E6A19C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */; };
+		2094AC3319E4D0AA00AF33ED /* RainforestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */; };
 		20A29BFC19B55FA3007FF4F2 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */; };
+		20D857E019E7744C00C74F2D /* AttributionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		2061349C19B53BE200888CAB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2061348119B53BE200888CAB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2061348819B53BE200888CAB;
-			remoteInfo = Layers;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		20101BE119CF2E7900E363A8 /* RainforestLifeform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestLifeform.swift; sourceTree = "<group>"; };
+		20101BE119CF2E7900E363A8 /* RainforestCardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardInfo.swift; sourceTree = "<group>"; };
 		20101BE319CF36B400E363A8 /* LAGradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAGradientNode.h; sourceTree = "<group>"; };
 		20101BE419CF36B400E363A8 /* LAGradientNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LAGradientNode.mm; sourceTree = "<group>"; };
 		20101BE619CF467700E363A8 /* NodeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFactory.swift; sourceTree = "<group>"; };
 		20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFramesetter.swift; sourceTree = "<group>"; };
+		202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributionTableViewCell.swift; sourceTree = "<group>"; };
 		203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2061348919B53BE200888CAB /* Layers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Layers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2061348D19B53BE200888CAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -46,15 +39,14 @@
 		2061349019B53BE200888CAB /* RainforestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainforestViewController.swift; sourceTree = "<group>"; };
 		2061349319B53BE200888CAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2061349519B53BE200888CAB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		2061349B19B53BE200888CAB /* LayersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LayersTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		206134A019B53BE200888CAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		206134A119B53BE200888CAB /* LayersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersTests.swift; sourceTree = "<group>"; };
-		206134AB19B53F8000888CAB /* RainforestInfoCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestInfoCardCell.swift; sourceTree = "<group>"; };
+		206134AB19B53F8000888CAB /* RainforestCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardCell.swift; sourceTree = "<group>"; };
 		207A0E6819C650DD00F6AAB6 /* LAAnimatedDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAAnimatedDisplayLayer.h; sourceTree = "<group>"; };
 		207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAAnimatedDisplayLayer.m; sourceTree = "<group>"; };
+		2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardView.swift; sourceTree = "<group>"; };
 		20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Layers-Bridging-Header.h"; sourceTree = "<group>"; };
 		20A29BFA19B55FA3007FF4F2 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributionTableViewController.swift; sourceTree = "<group>"; };
 		3BAA838C1386461E854EE491 /* Pods-Layers.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Layers.xcconfig"; path = "Pods/Pods-Layers.xcconfig"; sourceTree = "<group>"; };
 		93A16CEE3C744E318A68991B /* libPods-Layers.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Layers.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -68,13 +60,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2061349819B53BE200888CAB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -82,10 +67,9 @@
 			isa = PBXGroup;
 			children = (
 				2061348B19B53BE200888CAB /* Layers */,
-				2061349E19B53BE200888CAB /* LayersTests */,
 				2061348A19B53BE200888CAB /* Products */,
-				3BAA838C1386461E854EE491 /* Pods-Layers.xcconfig */,
 				B81D8E7235C34FD1A79601C7 /* Frameworks */,
+				3BAA838C1386461E854EE491 /* Pods-Layers.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,7 +77,6 @@
 			isa = PBXGroup;
 			children = (
 				2061348919B53BE200888CAB /* Layers.app */,
-				2061349B19B53BE200888CAB /* LayersTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,23 +84,13 @@
 		2061348B19B53BE200888CAB /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				20A29BFA19B55FA3007FF4F2 /* UIImage+ImageEffects.h */,
-				20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */,
+				2094AC3119E4CE1F00AF33ED /* Private */,
 				20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */,
-				2061348E19B53BE200888CAB /* AppDelegate.swift */,
 				2061349019B53BE200888CAB /* RainforestViewController.swift */,
-				203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */,
-				20101BE119CF2E7900E363A8 /* RainforestLifeform.swift */,
-				206134AB19B53F8000888CAB /* RainforestInfoCardCell.swift */,
+				206134AB19B53F8000888CAB /* RainforestCardCell.swift */,
 				20101BE619CF467700E363A8 /* NodeFactory.swift */,
 				20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */,
-				2061349219B53BE200888CAB /* Main.storyboard */,
-				2061349519B53BE200888CAB /* Images.xcassets */,
-				2061348C19B53BE200888CAB /* Supporting Files */,
-				207A0E6819C650DD00F6AAB6 /* LAAnimatedDisplayLayer.h */,
-				207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */,
-				20101BE319CF36B400E363A8 /* LAGradientNode.h */,
-				20101BE419CF36B400E363A8 /* LAGradientNode.mm */,
+				2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -130,21 +103,25 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2061349E19B53BE200888CAB /* LayersTests */ = {
+		2094AC3119E4CE1F00AF33ED /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				206134A119B53BE200888CAB /* LayersTests.swift */,
-				2061349F19B53BE200888CAB /* Supporting Files */,
+				20101BE119CF2E7900E363A8 /* RainforestCardInfo.swift */,
+				203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */,
+				20A29BFA19B55FA3007FF4F2 /* UIImage+ImageEffects.h */,
+				20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */,
+				2061348C19B53BE200888CAB /* Supporting Files */,
+				2061349519B53BE200888CAB /* Images.xcassets */,
+				2061349219B53BE200888CAB /* Main.storyboard */,
+				2061348E19B53BE200888CAB /* AppDelegate.swift */,
+				207A0E6819C650DD00F6AAB6 /* LAAnimatedDisplayLayer.h */,
+				207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */,
+				20101BE319CF36B400E363A8 /* LAGradientNode.h */,
+				20101BE419CF36B400E363A8 /* LAGradientNode.mm */,
+				20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */,
+				202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */,
 			);
-			path = LayersTests;
-			sourceTree = "<group>";
-		};
-		2061349F19B53BE200888CAB /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				206134A019B53BE200888CAB /* Info.plist */,
-			);
-			name = "Supporting Files";
+			name = Private;
 			sourceTree = "<group>";
 		};
 		B81D8E7235C34FD1A79601C7 /* Frameworks */ = {
@@ -177,24 +154,6 @@
 			productReference = 2061348919B53BE200888CAB /* Layers.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2061349A19B53BE200888CAB /* LayersTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 206134A819B53BE200888CAB /* Build configuration list for PBXNativeTarget "LayersTests" */;
-			buildPhases = (
-				2061349719B53BE200888CAB /* Sources */,
-				2061349819B53BE200888CAB /* Frameworks */,
-				2061349919B53BE200888CAB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2061349D19B53BE200888CAB /* PBXTargetDependency */,
-			);
-			name = LayersTests;
-			productName = LayersTests;
-			productReference = 2061349B19B53BE200888CAB /* LayersTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -207,10 +166,6 @@
 					2061348819B53BE200888CAB = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = CX9J48U7L2;
-					};
-					2061349A19B53BE200888CAB = {
-						CreatedOnToolsVersion = 6.0;
-						TestTargetID = 2061348819B53BE200888CAB;
 					};
 				};
 			};
@@ -228,7 +183,6 @@
 			projectRoot = "";
 			targets = (
 				2061348819B53BE200888CAB /* Layers */,
-				2061349A19B53BE200888CAB /* LayersTests */,
 			);
 		};
 /* End PBXProject section */
@@ -240,13 +194,6 @@
 			files = (
 				2061349419B53BE200888CAB /* Main.storyboard in Resources */,
 				2061349619B53BE200888CAB /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2061349919B53BE200888CAB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,32 +241,19 @@
 				2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */,
 				20101BE919CF4E9300E363A8 /* NodeFramesetter.swift in Sources */,
 				20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */,
-				20101BE219CF2E7900E363A8 /* RainforestLifeform.swift in Sources */,
+				202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */,
+				20101BE219CF2E7900E363A8 /* RainforestCardInfo.swift in Sources */,
 				2061348F19B53BE200888CAB /* AppDelegate.swift in Sources */,
-				206134AC19B53F8000888CAB /* RainforestInfoCardCell.swift in Sources */,
+				206134AC19B53F8000888CAB /* RainforestCardCell.swift in Sources */,
+				20D857E019E7744C00C74F2D /* AttributionTableViewController.swift in Sources */,
 				207A0E6A19C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m in Sources */,
 				20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */,
 				203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2061349719B53BE200888CAB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				206134A219B53BE200888CAB /* LayersTests.swift in Sources */,
+				2094AC3319E4D0AA00AF33ED /* RainforestCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2061349D19B53BE200888CAB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2061348819B53BE200888CAB /* Layers */;
-			targetProxy = 2061349C19B53BE200888CAB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2061349219B53BE200888CAB /* Main.storyboard */ = {
@@ -447,40 +381,6 @@
 			};
 			name = Release;
 		};
-		206134A919B53BE200888CAB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = LayersTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Layers.app/Layers";
-			};
-			name = Debug;
-		};
-		206134AA19B53BE200888CAB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = LayersTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Layers.app/Layers";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -498,15 +398,6 @@
 			buildConfigurations = (
 				206134A619B53BE200888CAB /* Debug */,
 				206134A719B53BE200888CAB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		206134A819B53BE200888CAB /* Build configuration list for PBXNativeTarget "LayersTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				206134A919B53BE200888CAB /* Debug */,
-				206134AA19B53BE200888CAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

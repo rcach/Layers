@@ -8,9 +8,11 @@
 
 class NodeFramesetter {
   class var textAreaHeight: CGFloat {
+    //TODO: This constant is also inside the cell class, consolidate.
     return 300.0
   }
   
+  //TODO: Pass in the feature image metrics from the cell so that logic is consolidated.
   class func layOutRainforestInfoCardNodeHierarchy(#contentNode: ASDisplayNode, backgroundImageNode: ASImageNode, featureImageNode: ASImageNode, gradientNode: LAGradientNode, titleTextNode: ASTextNode, descriptionTextNode: ASTextNode) {
     let width: CGFloat = 320.0 //TODO: Remove hardcoded value.
     if let image = featureImageNode.image {

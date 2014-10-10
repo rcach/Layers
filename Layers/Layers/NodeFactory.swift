@@ -60,9 +60,19 @@ class NodeFactory {
     let backgroundImageNode = createNewImageNode()
     backgroundImageNode.contentMode = .ScaleAspectFill
     backgroundImageNode.image = image
-    backgroundImageNode.imageModificationBlock = { input in
+    backgroundImageNode.imageModificationBlock = { (input: UIImage!) -> UIImage in
       let tintColor = UIColor(white: 0.5, alpha: 0.3)
-      return input.applyBlurWithRadius(30, tintColor: tintColor, saturationDeltaFactor: 1.8, maskImage: nil, node:backgroundImageNode)
+      if input == nil {
+        return input
+      }
+      return input.applyBlurWithRadius(30, tintColor: tintColor, saturationDeltaFactor: 1.8, maskImage: nil, didCancel: { () -> Bool in
+//        if (backgroundImageNode.preventOrCancelDisplay == true) {
+//          println("Did Cancel Blur in progress")
+//          return true
+//        } else {
+          return false
+//        }
+      })
     }
     return backgroundImageNode
   }
