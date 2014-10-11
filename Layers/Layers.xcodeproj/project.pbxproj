@@ -13,6 +13,7 @@
 		20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE619CF467700E363A8 /* NodeFactory.swift */; };
 		20101BE919CF4E9300E363A8 /* NodeFramesetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */; };
 		202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */; };
+		202BB8CA19E83787009CD152 /* ASDisplayNode+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 202BB8C919E83787009CD152 /* ASDisplayNode+Extras.m */; };
 		203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */; };
 		2061348F19B53BE200888CAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061348E19B53BE200888CAB /* AppDelegate.swift */; };
 		2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061349019B53BE200888CAB /* RainforestViewController.swift */; };
@@ -32,6 +33,8 @@
 		20101BE619CF467700E363A8 /* NodeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFactory.swift; sourceTree = "<group>"; };
 		20101BE819CF4E9300E363A8 /* NodeFramesetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFramesetter.swift; sourceTree = "<group>"; };
 		202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributionTableViewCell.swift; sourceTree = "<group>"; };
+		202BB8C819E83787009CD152 /* ASDisplayNode+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASDisplayNode+Extras.h"; sourceTree = "<group>"; };
+		202BB8C919E83787009CD152 /* ASDisplayNode+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ASDisplayNode+Extras.m"; sourceTree = "<group>"; };
 		203646A919DD00980085BFD5 /* RainforestCollectionViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCollectionViewLayout.swift; sourceTree = "<group>"; };
 		2061348919B53BE200888CAB /* Layers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Layers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2061348D19B53BE200888CAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				20101BE419CF36B400E363A8 /* LAGradientNode.mm */,
 				20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */,
 				202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */,
+				202BB8C819E83787009CD152 /* ASDisplayNode+Extras.h */,
+				202BB8C919E83787009CD152 /* ASDisplayNode+Extras.m */,
 			);
 			name = Private;
 			sourceTree = "<group>";
@@ -247,6 +252,7 @@
 				206134AC19B53F8000888CAB /* RainforestCardCell.swift in Sources */,
 				20D857E019E7744C00C74F2D /* AttributionTableViewController.swift in Sources */,
 				207A0E6A19C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m in Sources */,
+				202BB8CA19E83787009CD152 /* ASDisplayNode+Extras.m in Sources */,
 				20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */,
 				203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */,
 				2094AC3319E4D0AA00AF33ED /* RainforestCardView.swift in Sources */,

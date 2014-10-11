@@ -166,8 +166,6 @@
           radius += 1; // force radius to be odd so that the three box-blur methodology works.
         }
         
-//        if (node == nil || node.preventOrCancelDisplay ) {
-//        }
         if (didCancel()) {
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
@@ -175,8 +173,7 @@
         }
         
         vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
-//        if (node == nil || node.preventOrCancelDisplay ) {
-//        }
+
         if (didCancel()) {
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
@@ -184,8 +181,7 @@
         }
         
         vImageBoxConvolve_ARGB8888(&effectOutBuffer, &effectInBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
-//        if (node == nil || node.preventOrCancelDisplay ) {
-//        }
+
         if (didCancel()) {
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
@@ -194,8 +190,7 @@
         
         vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
       }
-//      if (node == nil || node.preventOrCancelDisplay ) {
-//      }
+
       if (didCancel()) {
         UIGraphicsEndImageContext();
         UIGraphicsEndImageContext();

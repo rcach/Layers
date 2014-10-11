@@ -28,12 +28,13 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
     let lifeform = lifeforms[indexPath.item]
     
     cell.removeAllContentViewSublayers()
-    cell.featureImageSizeOptional = UIImage(named: lifeform.imageName).size
+    let image = UIImage(named: lifeform.imageName)
+    cell.featureImageSizeOptional = image.size
     if let oldNodeConstructionOperation = cell.nodeConstructionOperation {
       oldNodeConstructionOperation.cancel()
     }
     
-    nodeConstructionQueue.addOperation(cell.nodeConstructionOperationWithLifeform(lifeform))
+    nodeConstructionQueue.addOperation(cell.nodeConstructionOperationWithLifeform(lifeform, image: image))
     return cell
   }
   

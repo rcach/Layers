@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bpW-36-70H">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="F9Z-Yo-ikX">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Rainforest View Controller-->
+        <!--Tab Bar Controller-->
+        <scene sceneID="7T5-Vj-hF5">
+            <objects>
+                <tabBarController id="F9Z-Yo-ikX" sceneMemberID="viewController">
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="djL-AS-ggd">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="AcX-cl-8zd" kind="relationship" relationship="viewControllers" id="VSd-2c-2X5"/>
+                        <segue destination="bpW-36-70H" kind="relationship" relationship="viewControllers" id="OdE-LE-sVY"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3tF-aM-W7x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-440" y="719"/>
+        </scene>
+        <!--Cards-->
         <scene sceneID="9uD-Qn-qQI">
             <objects>
-                <collectionViewController id="AcX-cl-8zd" customClass="RainforestViewController" customModule="Layers" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController title="Cards" id="AcX-cl-8zd" customClass="RainforestViewController" customModule="Layers" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fyX-Sc-SKf">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -36,15 +55,16 @@
                             <outlet property="delegate" destination="AcX-cl-8zd" id="CU4-wq-2jB"/>
                         </connections>
                     </collectionView>
+                    <tabBarItem key="tabBarItem" title="Cards" id="1zK-BK-9Fb"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Ea-PI-rgt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="516" y="395"/>
         </scene>
-        <!--Attribution Table View Controller-->
+        <!--Attributions-->
         <scene sceneID="C3g-Sd-oqo">
             <objects>
-                <tableViewController id="bpW-36-70H" customClass="AttributionTableViewController" customModule="Layers" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Attributions" id="bpW-36-70H" customClass="AttributionTableViewController" customModule="Layers" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="277" sectionHeaderHeight="22" sectionFooterHeight="22" id="Nsy-LG-av8">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -185,6 +205,7 @@
                             <outlet property="delegate" destination="bpW-36-70H" id="pyj-vF-AQX"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Attributions" id="vNK-DQ-bVN"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OR4-wT-xyr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

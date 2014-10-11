@@ -101,7 +101,7 @@ class RainforestCardCell: UICollectionViewCell {
   }
   
   //MARK: Nodes
-  func nodeConstructionOperationWithLifeform(lifeform: RainforestCardInfo) -> NSOperation {
+  func nodeConstructionOperationWithLifeform(lifeform: RainforestCardInfo, image: UIImage) -> NSOperation {
     let nodeConstructionOperation = NSBlockOperation()
     nodeConstructionOperation.addExecutionBlock { [unowned nodeConstructionOperation, weak self] in
       if nodeConstructionOperation.cancelled {
@@ -116,7 +116,15 @@ class RainforestCardCell: UICollectionViewCell {
       
       // TODO: Does Swift automatically promote weak capture var to Strong?
       let realCell = self!
-      let lifeformImage = UIImage(named: lifeform.imageName)
+//      var lifeformImageOrNil: UIImage?
+//      
+//      dispatch_sync(dispatch_get_main_queue()) {
+//        lifeformImageOrNil = UIImage(named: lifeform.imageName)
+//      }
+//      if lifeformImageOrNil == nil {
+//        return
+//      }
+      let lifeformImage = image
       
       let featureImageNode = NodeFactory.createNewFeatureImageNodeWithImage(lifeformImage)
       let backgroundImageNode = NodeFactory.createNewBackgroundImageNodeWithImage(lifeformImage)
