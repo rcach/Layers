@@ -116,14 +116,6 @@ class RainforestCardCell: UICollectionViewCell {
       
       // TODO: Does Swift automatically promote weak capture var to Strong?
       let realCell = self!
-//      var lifeformImageOrNil: UIImage?
-//      
-//      dispatch_sync(dispatch_get_main_queue()) {
-//        lifeformImageOrNil = UIImage(named: lifeform.imageName)
-//      }
-//      if lifeformImageOrNil == nil {
-//        return
-//      }
       let lifeformImage = image
       
       let featureImageNode = NodeFactory.createNewFeatureImageNodeWithImage(lifeformImage)
@@ -147,7 +139,15 @@ class RainforestCardCell: UICollectionViewCell {
         return
       }
       
-      NodeFramesetter.layOutRainforestInfoCardNodeHierarchy(contentNode: contentNode, backgroundImageNode: backgroundImageNode, featureImageNode: featureImageNode, gradientNode: gradientNode, titleTextNode: titleTextNode, descriptionTextNode: descriptionTextNode)
+      //TODO: Rename contentNode to container node.
+      //TODO: Pass in image size straight up, without grabbing image from node.
+      contentNode.frame = FrameCalculator.frameForContainer(featureImageSize: featureImageNode.image.size)
+      backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: contentNode.bounds)
+      //TODO: Pass in image size straight up, without grabbing image from node.
+      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageNode.image.size, containerFrameWidth: contentNode.frame.size.width)
+      gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
+      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: contentNode.bounds, featureImageFrame: featureImageNode.frame)
+      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: contentNode.bounds, featureImageFrame: featureImageNode.frame)
       
       if nodeConstructionOperation.cancelled {
         return

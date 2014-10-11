@@ -15,7 +15,8 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
                             
   override func viewDidLoad() {
     super.viewDidLoad()
-    nodeConstructionQueue.maxConcurrentOperationCount = 1
+    nodeConstructionQueue.maxConcurrentOperationCount = 2
+    self.collectionView?.backgroundView = UIImageView(image: UIImage(named: "background"))
   }
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

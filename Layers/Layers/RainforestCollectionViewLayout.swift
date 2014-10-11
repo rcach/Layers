@@ -204,7 +204,7 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
     self.allLayoutAttributes[originalAttributes.indexPath.item] = preferredAttributes
 
     if originalAttributes.indexPath.item == 9 {
-      println(self.allLayoutAttributes)
+//      println(self.allLayoutAttributes)
 //      println("\n\n ACTUAL CONTENT SIZE: \(self.collectionView?.contentSize) \n\n ")
     }
     
