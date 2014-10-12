@@ -1,7 +1,7 @@
 PODS:
-  - AsyncDisplayKit (1.0beta):
-    - AsyncDisplayKit/no-arc
-  - AsyncDisplayKit/no-arc (1.0beta)
+  - AsyncDisplayKit (1.0-beta2):
+    - AsyncDisplayKit/ASDealloc2MainObject
+  - AsyncDisplayKit/ASDealloc2MainObject (1.0-beta2)
 
 DEPENDENCIES:
   - AsyncDisplayKit (from `https://github.com/facebook/AsyncDisplayKit.git`)
@@ -11,6 +11,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/facebook/AsyncDisplayKit.git
 
 SPEC CHECKSUMS:
-  AsyncDisplayKit: c8f9506ec467f7562210fc58cefd41ed49dfc8c8
+  AsyncDisplayKit: a89ae012f18f22e12fcc030ca53297e2835971e3
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.2

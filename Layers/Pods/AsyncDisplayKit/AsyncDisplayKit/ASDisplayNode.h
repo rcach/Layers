@@ -10,15 +10,14 @@
 
 #import "_ASAsyncTransactionContainer.h"
 #import "ASBaseDefines.h"
+#import "ASDealloc2MainObject.h"
 
 
 /**
  * An `ASDisplayNode` is an abstraction over `UIView` and `CALayer` that allows you to perform calculations about a view
  * hierarchy off the main thread, and could do rendering off the main thread as well.
  *
- * The node API is designed to be as similar as possible to `UIView`.
- *
- * TODO add more details + example
+ * The node API is designed to be as similar as possible to `UIView`. See the README for examples.
  *
  * ## Subclassing
  *
@@ -30,7 +29,7 @@
  *
  */
 
-@interface ASDisplayNode : NSObject
+@interface ASDisplayNode : ASDealloc2MainObject
 
 
 /** @name Initializing a node object */
@@ -97,11 +96,11 @@
 @property (nonatomic, readonly, retain) UIView *view;
 
 /** 
- * @abstract Returns whether a view is loaded.
+ * @abstract Returns whether a node's backing view or layer is loaded.
  *
  * @return YES if a view is loaded, or if isLayerBacked is YES and layer is not nil; NO otherwise.
  */
-@property (atomic, readonly, assign, getter=isViewLoaded) BOOL viewLoaded; //TODO Rename to isBackingLoaded?
+@property (atomic, readonly, assign, getter=isNodeLoaded) BOOL nodeLoaded;
 
 /** 
  * @abstract Returns whether the node rely on a layer instead of a view.
@@ -140,13 +139,13 @@
  *
  * @see calculateSizeThatFits:
  */
-- (CGSize)sizeToFit:(CGSize)constrainedSize; //TODO UIView names it sizeThatFits ("that" instead of "to")
+- (CGSize)measure:(CGSize)constrainedSize;
 
 /** 
  * @abstract Return the calculated size.
  *
  * @discussion Ideal for use by subclasses in -layout, having already prompted their subnodes to calculate their size by
- * calling -sizeToFit: on them in -calculateSizeThatFits:.
+ * calling -measure: on them in -calculateSizeThatFits:.
  *
  * @return Size already calculated by calculateSizeThatFits:.
  *
@@ -159,7 +158,7 @@
  *
  * @return The constrained size used by calculateSizeThatFits:.
  */
-@property (nonatomic, readonly, assign) CGSize constrainedSizeForCalulatedSize;
+@property (nonatomic, readonly, assign) CGSize constrainedSizeForCalculatedSize;
 
 
 /** @name Managing the nodes hierarchy */
@@ -223,32 +222,6 @@
 - (void)replaceSubnode:(ASDisplayNode *)subnode withSubnode:(ASDisplayNode *)replacementSubnode;
 
 /** 
- * @abstract Add a subnode, but have it size asynchronously on a background queue.
- *
- * @param subnode The unsized subnode to insert into the view hierarchy
- * @param completion The completion callback will be called on the main queue after the subnode has been inserted in 
- * place of the placeholder.
- *
- * @return A placeholder node is inserted into the hierarchy where the node will be. The placeholder can be moved around 
- * in the hiercharchy while the view is sizing. Once sizing is complete on the background queue, this placeholder will 
- * be removed and the replacement will be put at its place.
- */
-- (ASDisplayNode *)addSubnodeAsynchronously:(ASDisplayNode *)subnode
-                              completion:(void(^)(ASDisplayNode *replacement))completion;
-
-/** 
- * @abstract Replace a subnode, but have it size asynchronously on a background queue.
- *
- * @param subnode A subnode of self.
- * @param replacementSubnode A node with which to replace subnode.
- * @param completion The completion callback will be called on the main queue after the replacementSubnode has replaced 
- * subnode.
- */
-- (void)replaceSubnodeAsynchronously:(ASDisplayNode *)subnode
-                            withNode:(ASDisplayNode *)replacementSubnode
-                          completion:(void(^)(BOOL cancelled, ASDisplayNode *replacement, ASDisplayNode *oldSubnode))completion;
-
-/** 
  * @abstract Remove this node from its supernode.
  *
  * @discussion The node's view will be automatically removed from the supernode's view.
@@ -263,22 +236,7 @@
 /** 
  * @abstract The receiver's supernode.
  */
-@property (nonatomic, readonly, assign) ASDisplayNode *supernode;
-
-
-/** @name Observing node-related changes */
-
-
-// TODO rename these to the UIView selectors, willMoveToSuperview etc
-
-// Called just before the view is added to a superview.
-- (void)willAppear;
-
-// Called after the view is removed from the window
-- (void)willDisappear;
-
-// Called after the view is removed from the window
-- (void)didDisappear;
+@property (nonatomic, readonly, weak) ASDisplayNode *supernode;
 
 
 /** @name Drawing and Updating the View */

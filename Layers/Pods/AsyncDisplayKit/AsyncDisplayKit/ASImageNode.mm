@@ -40,24 +40,16 @@
 
   _cropEnabled = cropEnabled;
   _opaque = opaque;
-  _image = [image retain];
+  _image = image;
   _bounds = bounds;
   _contentsScale = contentsScale;
-  _backgroundColor = [backgroundColor retain];
+  _backgroundColor = backgroundColor;
   _tint = tint;
   _contentMode = contentMode;
   _cropRect = cropRect;
   _imageModificationBlock = [imageModificationBlock copy];
 
   return self;
-}
-
-- (void)dealloc
-{
-  [_image release];
-  [_backgroundColor release];
-  [_imageModificationBlock release];
-  [super dealloc];
 }
 
 - (NSString *)description
@@ -102,14 +94,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_displayCompletionBlock release];
-  [_image release];
-  [_imageModificationBlock release];
-  [super dealloc];
-}
-
 - (CGSize)calculateSizeThatFits:(CGSize)constrainedSize
 {
   ASDN::MutexLocker l(_imageLock);
@@ -124,8 +108,7 @@
   ASDisplayNodeAssertThreadAffinity(self);
   ASDN::MutexLocker l(_imageLock);
   if (_image != image) {
-    [_image release];
-    _image = [image retain];
+    _image = image;
     [self invalidateCalculatedSize];
     [self setNeedsDisplay];
   }
@@ -135,7 +118,7 @@
 {
   ASDisplayNodeAssertThreadAffinity(self);
   ASDN::MutexLocker l(_imageLock);
-  return [[_image retain] autorelease];
+  return _image;
 }
 
 - (void)setTint:(ASImageNodeTint)tint
@@ -159,23 +142,22 @@
 {
   BOOL hasValidCropBounds = _cropEnabled && !CGRectIsNull(_cropDisplayBounds) && !CGRectIsEmpty(_cropDisplayBounds);
 
-  return [[[_ASImageNodeDrawParameters alloc] initWithCrop:_cropEnabled
-                                                    opaque:self.opaque
-                                                     image:self.image
-                                                    bounds:(hasValidCropBounds ? _cropDisplayBounds : self.bounds)
-                                             contentsScale:self.contentsScaleForDisplay
-                                           backgroundColor:self.backgroundColor
-                                                      tint:self.tint
-                                               contentMode:self.contentMode
-                                                  cropRect:self.cropRect
-                                    imageModificationBlock:self.imageModificationBlock
-    ] autorelease];
+  return [[_ASImageNodeDrawParameters alloc] initWithCrop:_cropEnabled
+                                                   opaque:self.opaque
+                                                    image:self.image
+                                                   bounds:(hasValidCropBounds ? _cropDisplayBounds : self.bounds)
+                                            contentsScale:self.contentsScaleForDisplay
+                                          backgroundColor:self.backgroundColor
+                                                     tint:self.tint
+                                              contentMode:self.contentMode
+                                                 cropRect:self.cropRect
+                                   imageModificationBlock:self.imageModificationBlock];
 }
 
 + (UIImage *)displayWithParameters:(_ASImageNodeDrawParameters *)parameters isCancelled:(asdisplaynode_iscancelled_block_t)isCancelled
 {
   UIImage *image = parameters.image;
-  
+
   if (!image) {
     return nil;
   }
@@ -249,9 +231,7 @@
     return nil;
   }
 
-
   UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-
 
   UIGraphicsEndImageContext();
 
@@ -266,15 +246,15 @@
   return result;
 }
 
-- (void)didDisappear
+- (void)didExitHierarchy
 {
   self.contents = nil;
-  [super didDisappear];
+  [super didExitHierarchy];
 }
 
-- (void)willAppear
+- (void)willEnterHierarchy
 {
-  [super willAppear];
+  [super willEnterHierarchy];
 
   if (!self.layer.contents)
     [self setNeedsDisplay];
@@ -289,7 +269,6 @@
 
     // FIXME: _displayCompletionBlock is not protected by lock
     _displayCompletionBlock(NO);
-    [_displayCompletionBlock release];
     _displayCompletionBlock = nil;
   }
 }
@@ -306,7 +285,6 @@
   // Stash the block and call-site queue. We'll invoke it in -displayDidFinish.
   // FIXME: _displayCompletionBlock not protected by lock
   if (_displayCompletionBlock != displayCompletionBlock) {
-    [_displayCompletionBlock release];
     _displayCompletionBlock = [displayCompletionBlock copy];
   }
 
@@ -367,7 +345,7 @@
   BOOL isCroppingImage = ((boundsSize.width < imageSize.width) || (boundsSize.height < imageSize.height));
 
   // Re-display if we need to.
-  if (self.isViewLoaded && self.contentMode == UIViewContentModeScaleAspectFill && isCroppingImage)
+  if (self.nodeLoaded && self.contentMode == UIViewContentModeScaleAspectFill && isCroppingImage)
     [self setNeedsDisplay];
 }
 

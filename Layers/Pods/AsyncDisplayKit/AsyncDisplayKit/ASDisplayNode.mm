@@ -55,7 +55,7 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector)
 
   // Subclasses should never override these
   ASDisplayNodeAssert(!ASDisplayNodeSubclassOverridesSelector(self, @selector(calculatedSize)), @"Subclass %@ must not override calculatedSize method", NSStringFromClass(self));
-  ASDisplayNodeAssert(!ASDisplayNodeSubclassOverridesSelector(self, @selector(sizeToFit:)), @"Subclass %@ must not override sizeToFit method", NSStringFromClass(self));
+  ASDisplayNodeAssert(!ASDisplayNodeSubclassOverridesSelector(self, @selector(measure:)), @"Subclass %@ must not override measure method", NSStringFromClass(self));
 }
 
 + (BOOL)layerBackedNodesEnabled
@@ -81,7 +81,7 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector)
     return nil;
 
   ASDisplayNodeAssert([viewClass isSubclassOfClass:[UIView class]], @"should initialize with a subclass of UIView");
-  _viewClass = [viewClass retain];
+  _viewClass = viewClass;
   _flags.isSynchronous = ![viewClass isSubclassOfClass:[_ASDisplayView class]];
 
   return self;
@@ -94,7 +94,7 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector)
 
   ASDisplayNodeAssert([layerClass isSubclassOfClass:[CALayer class]], @"should initialize with a subclass of CALayer");
 
-  _layerClass = [layerClass retain];
+  _layerClass = layerClass;
   _flags.isSynchronous = ![layerClass isSubclassOfClass:[_ASDisplayLayer class]];
 
   _flags.isLayerBacked = YES;
@@ -123,14 +123,6 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector)
   return self;
 }
 
-#if __has_feature(objc_arc)
-#warning This file must be compiled without ARC. Use -fno-objc-arc (or convert project to MRR).
-#endif
-
-#if !__has_feature(objc_arc)
-_OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
-#endif
-
 - (void)dealloc
 {
   ASDisplayNodeAssertMainThread();
@@ -147,28 +139,18 @@ _OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
   for (ASDisplayNode *subnode in _subnodes)
     [subnode __setSupernode:nil];
 
-  [_viewClass release];
-  [_subnodes release];
-
-  [_view release];
   _view = nil;
   _subnodes = nil;
   if (_flags.isLayerBacked) {
     _layer.delegate = nil;
   }
-  [_layer release];
   _layer = nil;
 
   [self __setSupernode:nil];
-  [_pendingViewState release];
   _pendingViewState = nil;
-  [_replaceAsyncSentinel release];
   _replaceAsyncSentinel = nil;
 
-  [_displaySentinel release];
   _displaySentinel = nil;
-
-  [super dealloc];
 }
 
 #pragma mark - UIResponder overrides
@@ -230,7 +212,7 @@ _OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
     }
     _view = [[_viewClass alloc] init];
     _view.asyncdisplaykit_node = self;
-    _layer = [_view.layer retain];
+    _layer = _view.layer;
   }
   _layer.asyncdisplaykit_node = self;
 #if DEBUG
@@ -291,7 +273,7 @@ _OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
   return [_layer isKindOfClass:[_ASDisplayLayer class]] ? (_ASDisplayLayer *)_layer : nil;
 }
 
-- (BOOL)isViewLoaded
+- (BOOL)isNodeLoaded
 {
   ASDN::MutexLocker l(_propertyLock);
   return (_view != nil || (_flags.isLayerBacked && _layer != nil));
@@ -326,7 +308,7 @@ _OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
 
 #pragma mark -
 
-- (CGSize)sizeToFit:(CGSize)constrainedSize
+- (CGSize)measure:(CGSize)constrainedSize
 {
   ASDisplayNodeAssertThreadAffinity(self);
 
@@ -429,7 +411,7 @@ _OBJC_SUPPORTED_INLINE_REFCNT_WITH_DEALLOC2MAIN(_retainCount);
   ASDisplayNodeAssertMainThread();
   ASDN::MutexLocker l(_propertyLock);
   if (CGRectEqualToRect(_layer.bounds, CGRectZero))
-    return;     // Performing layout on a zero-bounds view often results in frame calculations with negative sizes after applying margins, which will cause sizeToFit: on subnodes to assert.
+    return;     // Performing layout on a zero-bounds view often results in frame calculations with negative sizes after applying margins, which will cause measure: on subnodes to assert.
   [self layout];
   [self layoutDidFinish];
 }
@@ -634,7 +616,7 @@ static bool disableNotificationsForMovingBetweenParents(ASDisplayNode *from, ASD
 
   [_subnodes addObject:subnode];
 
-  if (self.isViewLoaded) {
+  if (self.nodeLoaded) {
     // If this node has a view or layer, force the subnode to also create its view or layer and add it to the hierarchy here.
     // Otherwise there is no way for the subnode's view or layer to enter the hierarchy, except recursing down all
     // subnodes on the main thread after the node tree has been created but before the first display (which
@@ -670,8 +652,6 @@ static bool disableNotificationsForMovingBetweenParents(ASDisplayNode *from, ASD
 {
   if (subnodeIndex == NSNotFound)
     return;
-
-  [subnode retain];
 
   ASDisplayNode *oldParent = [subnode _deallocSafeSupernode];
   // Disable appearance methods during move between supernodes, but make sure we restore their state after we do our thing
@@ -715,7 +695,6 @@ static bool disableNotificationsForMovingBetweenParents(ASDisplayNode *from, ASD
   }
 
   [subnode __setSupernode:self];
-  [subnode release];
 }
 
 - (void)replaceSubnode:(ASDisplayNode *)oldSubnode withSubnode:(ASDisplayNode *)replacementSubnode
@@ -728,7 +707,7 @@ static bool disableNotificationsForMovingBetweenParents(ASDisplayNode *from, ASD
     return;
   }
 
-  ASDisplayNodeAssert(!(self.isViewLoaded && !oldSubnode.isViewLoaded), @"ASDisplayNode corruption bug. We have view loaded, but child node does not.");
+  ASDisplayNodeAssert(!(self.nodeLoaded && !oldSubnode.nodeLoaded), @"ASDisplayNode corruption bug. We have view loaded, but child node does not.");
   ASDisplayNodeAssert(_subnodes, @"You should have subnodes if you have a subnode");
 
   NSInteger subnodeIndex = [_subnodes indexOfObjectIdenticalTo:oldSubnode];
@@ -866,7 +845,7 @@ static NSInteger incrementIfFound(NSInteger i) {
 - (void)_addSubnodeSubviewOrSublayer:(ASDisplayNode *)subnode
 {
   ASDisplayNodeAssertMainThread();
-  ASDisplayNodeAssert(self.isViewLoaded, @"_addSubnodeSubview: should never be called before our own view is created");
+  ASDisplayNodeAssert(self.nodeLoaded, @"_addSubnodeSubview: should never be called before our own view is created");
 
   BOOL canUseViewAPI = !self.isLayerBacked && !subnode.isLayerBacked;
   if (canUseViewAPI) {
@@ -882,7 +861,7 @@ static NSInteger incrementIfFound(NSInteger i) {
 {
   ASDisplayNodeAssertMainThread();
 
-  for (ASDisplayNode *node in [[_subnodes copy] autorelease]) {
+  for (ASDisplayNode *node in [_subnodes copy]) {
     [self _addSubnodeSubviewOrSublayer:node];
   }
 }
@@ -978,9 +957,9 @@ static NSInteger incrementIfFound(NSInteger i) {
     _flags.isInAppear = YES;
     if (self.shouldRasterizeDescendants) {
       // Nodes that are descendants of a rasterized container do not have views or layers, and so cannot receive visibility notifications directly via orderIn/orderOut CALayer actions.  Manually send visibility notifications to rasterized descendants.
-      [self _recursiveWillAppear];
+      [self _recursiveWillEnterHierarchy];
     } else {
-      [self willAppear];
+      [self willEnterHierarchy];
     }
     _flags.isInAppear = NO;
   }
@@ -998,64 +977,41 @@ static NSInteger incrementIfFound(NSInteger i) {
     _flags.isInDisappear = YES;
     if (self.shouldRasterizeDescendants) {
       // Nodes that are descendants of a rasterized container do not have views or layers, and so cannot receive visibility notifications directly via orderIn/orderOut CALayer actions.  Manually send visibility notifications to rasterized descendants.
-      [self _recursiveWillDisappear];
+      [self _recursiveDidExitHierarchy];
     } else {
-      [self willDisappear];
+      [self didExitHierarchy];
     }
-
-    if (self.shouldRasterizeDescendants) {
-      // Nodes that are descendants of a rasterized container do not have views or layers, and so cannot receive visibility notifications directly via orderIn/orderOut CALayer actions.  Manually send visibility notifications to rasterized descendants.
-      [self _recursiveDidDisappear];
-    } else {
-      [self didDisappear];
-    }
-
     _flags.isInDisappear = NO;
   }
 }
 
-- (void)_recursiveWillAppear
+- (void)_recursiveWillEnterHierarchy
 {
   if (_flags.visibilityNotificationsDisabled) {
     return;
   }
 
   _flags.isInAppear = YES;
-  [self willAppear];
+  [self willEnterHierarchy];
   _flags.isInAppear = NO;
 
   for (ASDisplayNode *subnode in self.subnodes) {
-    [subnode _recursiveWillAppear];
+    [subnode _recursiveWillEnterHierarchy];
   }
 }
 
-- (void)_recursiveWillDisappear
+- (void)_recursiveDidExitHierarchy
 {
   if (_flags.visibilityNotificationsDisabled) {
     return;
   }
 
   _flags.isInDisappear = YES;
-  [self willDisappear];
+  [self didExitHierarchy];
   _flags.isInDisappear = NO;
 
   for (ASDisplayNode *subnode in self.subnodes) {
-    [subnode _recursiveWillDisappear];
-  }
-}
-
-- (void)_recursiveDidDisappear
-{
-  if (_flags.visibilityNotificationsDisabled) {
-    return;
-  }
-
-  _flags.isInDisappear = YES;
-  [self didDisappear];
-  _flags.isInDisappear = NO;
-
-  for (ASDisplayNode *subnode in self.subnodes) {
-    [subnode _recursiveDidDisappear];
+    [subnode _recursiveDidExitHierarchy];
   }
 }
 
@@ -1063,14 +1019,14 @@ static NSInteger incrementIfFound(NSInteger i) {
 {
   ASDisplayNodeAssertThreadAffinity(self);
   ASDN::MutexLocker l(_propertyLock);
-  return [[_subnodes copy] autorelease];
+  return [_subnodes copy];
 }
 
 - (ASDisplayNode *)supernode
 {
   ASDisplayNodeAssertThreadAffinity(self);
   ASDN::MutexLocker l(_propertyLock);
-  return [[_supernode retain] autorelease];
+  return _supernode;
 }
 
 // This is a thread-method to return the supernode without causing it to be retained autoreleased.  See -_removeSubnode: for details.
@@ -1100,7 +1056,7 @@ static NSInteger incrementIfFound(NSInteger i) {
   return _size;
 }
 
-- (CGSize)constrainedSizeForCalulatedSize
+- (CGSize)constrainedSizeForCalculatedSize
 {
   ASDisplayNodeAssertThreadAffinity(self);
   return _constrainedSize;
@@ -1109,7 +1065,7 @@ static NSInteger incrementIfFound(NSInteger i) {
 - (void)invalidateCalculatedSize
 {
   ASDisplayNodeAssertThreadAffinity(self);
-  // This will cause -sizeToFit: to actually compute the size instead of returning the previously cached size
+  // This will cause -measure: to actually compute the size instead of returning the previously cached size
   _flags.sizeCalculated = NO;
 }
 
@@ -1118,24 +1074,17 @@ static NSInteger incrementIfFound(NSInteger i) {
   ASDisplayNodeAssertMainThread();
 }
 
-- (void)willAppear
+- (void)willEnterHierarchy
 {
   ASDisplayNodeAssertMainThread();
-  ASDisplayNodeAssert(_flags.isInAppear, @"You should never call -willAppear directly. Appearance is automatically managed by ASDisplayNode");
+  ASDisplayNodeAssert(_flags.isInAppear, @"You should never call -willEnterHierarchy directly. Appearance is automatically managed by ASDisplayNode");
   ASDisplayNodeAssert(!_flags.isInDisappear, @"ASDisplayNode inconsistency. __appear and __disappear are mutually exclusive");
 }
 
-- (void)willDisappear
+- (void)didExitHierarchy
 {
   ASDisplayNodeAssertMainThread();
-  ASDisplayNodeAssert(_flags.isInDisappear, @"You should never call -willDisappear directly. Appearance is automatically managed by ASDisplayNode");
-  ASDisplayNodeAssert(!_flags.isInAppear, @"ASDisplayNode inconsistency. __appear and __disappear are mutually exclusive");
-}
-
-- (void)didDisappear
-{
-  ASDisplayNodeAssertMainThread();
-  ASDisplayNodeAssert(_flags.isInDisappear, @"You should never call -didDisappear directly. Appearance is automatically managed by ASDisplayNode");
+  ASDisplayNodeAssert(_flags.isInDisappear, @"You should never call -didExitHierarchy directly. Appearance is automatically managed by ASDisplayNode");
   ASDisplayNodeAssert(!_flags.isInAppear, @"ASDisplayNode inconsistency. __appear and __disappear are mutually exclusive");
 }
 
@@ -1273,7 +1222,7 @@ static NSInteger incrementIfFound(NSInteger i) {
 - (void)_applyPendingStateToViewOrLayer
 {
   ASDisplayNodeAssertMainThread();
-  ASDisplayNodeAssert(self.isViewLoaded, @"must have a view or layer");
+  ASDisplayNodeAssert(self.nodeLoaded, @"must have a view or layer");
 
   // If no view/layer properties were set before the view/layer were created, _pendingViewState will be nil and the default values
   // for the view/layer are still valid.
@@ -1285,7 +1234,6 @@ static NSInteger incrementIfFound(NSInteger i) {
     [_pendingViewState applyToView:_view];
   }
 
-  [_pendingViewState release];
   _pendingViewState = nil;
 
   // TODO: move this into real pending state
@@ -1330,7 +1278,7 @@ static NSInteger incrementIfFound(NSInteger i) {
 static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *layer, BOOL flag)
 {
   // If there is no layer, but node whose its view is loaded, then we can traverse down its layer hierarchy.  Otherwise we must stick to the node hierarchy to avoid loading views prematurely.  Note that for nodes that haven't loaded their views, they can't possibly have subviews/sublayers, so we don't need to traverse the layer hierarchy for them.
-  if (!layer && node && node.isViewLoaded) {
+  if (!layer && node && node.nodeLoaded) {
     layer = node.layer;
   }
 
@@ -1423,7 +1371,7 @@ static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *la
   if (!_replaceAsyncSentinel) {
     _replaceAsyncSentinel = [[ASSentinel alloc] init];
   }
-  return [[_replaceAsyncSentinel retain] autorelease];
+  return _replaceAsyncSentinel;
 }
 
 // Calls completion with nil to indicated cancellation
@@ -1439,7 +1387,7 @@ static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *la
     if (sentinel.value != sentinelValue)
       return dispatch_async(dispatch_get_main_queue(), ^{ completion(nil); });
 
-    [self sizeToFit:bounds.size];
+    [self measure:bounds.size];
 
     // Check sentinel after, bail early
     if (sentinel.value != sentinelValue)
@@ -1451,91 +1399,6 @@ static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *la
     });
   });
 
-}
-
-- (void)replaceSubnodeAsynchronously:(ASDisplayNode *)old withNode:(ASDisplayNode *)replacement completion:(void(^)(BOOL cancelled, ASDisplayNode *replacement, ASDisplayNode *oldSubnode))completion
-{
-
-  ASDisplayNodeAssert(old.supernode == self, @"Must replace something that is actually a subnode. You passed: %@", old);
-  ASDisplayNodeAssert(!replacement.isViewLoaded, @"Can't async size something that already has a view, since we currently have no way to convert a viewed node into a viewless one...");
-
-  // If we're already marked for replacement, cancel the pending request
-  ASSentinel *sentinel = [old _asyncReplaceSentinel];
-  uint32_t sentinelValue = [sentinel increment];
-
-  // Enqueue async sizing on our argument
-  [replacement _enqueueAsyncSizingWithSentinel:sentinel completion:^(ASDisplayNode *replacementCompletedNode) {
-    // Sizing is done; swap with our other view
-    // Check sentinel one more time in case it changed during sizing
-    if (replacementCompletedNode && sentinel.value == sentinelValue) {
-      if (old.supernode) {
-        if (old.supernode.inWindow) {
-          // Now wait for async display before notifying delegate that replacement is complete
-
-          // When async sizing is complete, add subnode below placeholder with 0 alpha
-          CGFloat replacementAlpha = replacement.alpha;
-          BOOL wasAsyncTransactionContainer = replacement.asyncdisplaykit_asyncTransactionContainer;
-          [old.supernode insertSubnode:replacement belowSubnode:old];
-
-          replacementCompletedNode.alpha = 0.0;
-          replacementCompletedNode.asyncdisplaykit_asyncTransactionContainer = YES;
-
-          ASDisplayNodeCAssert(replacementCompletedNode.isViewLoaded, @".layer shouldn't be the thing to load the view");
-
-          [replacement.layer.asyncdisplaykit_asyncTransaction addCompletionBlock:^(id<NSObject> unused, BOOL canceled) {
-            ASDisplayNodeCAssertMainThread();
-
-            canceled |= (sentinel.value != sentinelValue);
-
-            replacementCompletedNode.alpha = replacementAlpha;
-            replacementCompletedNode.asyncdisplaykit_asyncTransactionContainer = wasAsyncTransactionContainer;
-
-            if (!canceled) {
-              [old removeFromSupernode];
-            } else {
-              [replacementCompletedNode removeFromSupernode];
-            }
-
-            completion(canceled, replacementCompletedNode, old);
-          }];
-        } else {
-          // Not in window, don't wait for async display
-          [old.supernode replaceSubnode:old withSubnode:replacement];
-          completion(NO, replacementCompletedNode, old);
-        }
-
-      } else { // Old has been moved no longer to be in the hierarchy
-        // TODO: add code to removeFromSupernode and hook UIView methods to cancel sentinel here?
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Tried to replaceSubnodeAsynchronously an ASDisplayNode, but then removed it from the hierarchy... what did you mean?" userInfo:nil];
-
-        completion(NO, replacementCompletedNode, old);
-      }
-    } else { // If we were cancelled
-      completion(YES, nil, nil);
-    }
-  }];
-
-
-}
-
-- (ASDisplayNode *)addSubnodeAsynchronously:(ASDisplayNode *)replacement completion:(void(^)(ASDisplayNode *fullySizedSubnode))completion
-{
-  ASDisplayNodeAssertThreadAffinity(self);
-
-  // Create a placeholder ASDisplayNode that saves this guy's place in the view hierarchy for when things return later
-  ASDisplayNode *placeholder = [[ASDisplayNode alloc] init];
-
-  [self addSubnode:placeholder];
-  [self replaceSubnodeAsynchronously:placeholder withNode:replacement completion:^(BOOL cancelled, ASDisplayNode *replacementBlock, ASDisplayNode *placeholderBlock) {
-    if (replacementBlock && placeholderBlock && !cancelled) {
-      [placeholderBlock removeFromSupernode];
-      completion(replacementBlock);
-    } else {
-      [placeholderBlock removeFromSupernode];
-    }
-  }];
-
-  return [placeholder autorelease];
 }
 
 @end
@@ -1590,7 +1453,7 @@ static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *la
 
 - (NSString *)_recursiveDescriptionHelperWithIndent:(NSString *)indent
 {
-  NSMutableString *subtree = [[[[indent stringByAppendingString: self.descriptionForRecursiveDescription] stringByAppendingString:@"\n"] mutableCopy] autorelease];
+  NSMutableString *subtree = [[[indent stringByAppendingString: self.descriptionForRecursiveDescription] stringByAppendingString:@"\n"] mutableCopy];
   for (ASDisplayNode *n in self.subnodes) {
     [subtree appendString:[n _recursiveDescriptionHelperWithIndent:[indent stringByAppendingString:@" | "]]];
   }

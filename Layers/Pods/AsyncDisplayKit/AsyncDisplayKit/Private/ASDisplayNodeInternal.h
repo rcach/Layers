@@ -30,10 +30,9 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector);
 @interface ASDisplayNode () <_ASDisplayLayerDelegate>
 {
 @protected
-  int _retainCount;
   ASDN::RecursiveMutex _propertyLock;  // Protects access to the _view, _pendingViewState, _subnodes, _supernode, _renderingSubnodes, and other properties which are accessed from multiple threads.
 
-  ASDisplayNode *_supernode;
+  ASDisplayNode * __weak _supernode;
 
   ASSentinel *_displaySentinel;
   ASSentinel *_replaceAsyncSentinel;
@@ -90,6 +89,7 @@ BOOL ASDisplayNodeSubclassOverridesSelector(Class subclass, SEL selector);
 
 // Swizzle to extend the builtin functionality with custom logic
 - (BOOL)__shouldLoadViewOrLayer;
+- (BOOL)__shouldSize;
 
 - (void)__layout;
 - (void)__setSupernode:(ASDisplayNode *)supernode;

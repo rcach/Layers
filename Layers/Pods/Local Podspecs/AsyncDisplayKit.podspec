@@ -1,20 +1,13 @@
 Pod::Spec.new do |spec|
   spec.name         = 'AsyncDisplayKit'
-  spec.version      = '1.0beta'
+  spec.version      = '1.0-beta2'
   spec.license      =  { :type => 'BSD' }
-  spec.homepage     = 'https://github.com/facebook/AsyncDisplayKit'
+  spec.homepage     = 'http://facebook.github.io/AsyncDisplayKit/'
   spec.authors      = { 'Nadine Salter' => 'nadi@fb.com', 'Scott Goodson' => 'scottg@fb.com' }
   spec.summary      = 'Smooth asynchronous user interfaces for iOS apps.'
-  spec.source       = { :git => 'https://github.com/facebook/AsyncDisplayKit.git', :tag => '1.0beta' }
+  spec.source       = { :git => 'https://github.com/facebook/AsyncDisplayKit.git', :tag => '1.0-beta2' }
 
-  # these files mustn't be compiled with ARC enabled
-  mrr_source_files = [
-      'AsyncDisplayKit/ASDisplayNode.mm',
-      'AsyncDisplayKit/ASControlNode.m',
-      'AsyncDisplayKit/ASImageNode.mm',
-      'AsyncDisplayKit/Details/_ASDisplayView.mm',
-      'AsyncDisplayKit/Private/_ASPendingState.m',
-    ]
+  spec.documentation_url = 'http://facebook.github.io/AsyncDisplayKit/appledoc/'
 
   spec.public_header_files = [
       'AsyncDisplayKit/*.h',
@@ -22,13 +15,21 @@ Pod::Spec.new do |spec|
       'Base/*.h'
   ]
 
-  spec.source_files = ['AsyncDisplayKit/**/*.{h,m,mm}', 'Base/*.{h,m}']
-  spec.exclude_files = mrr_source_files
+  spec.source_files = [
+      'AsyncDisplayKit/**/*.{h,m,mm}',
+      'Base/*.{h,m}'
+  ]
 
+  # ASDealloc2MainObject must be compiled with MRR
   spec.requires_arc = true
-  spec.subspec 'no-arc' do |mrr|
+  spec.exclude_files = ['AsyncDisplayKit/Details/ASDealloc2MainObject.m']
+  spec.subspec 'ASDealloc2MainObject' do |mrr|
     mrr.requires_arc = false
-    mrr.source_files = mrr_source_files
+    mrr.source_files = [
+      'AsyncDisplayKit/Private/_AS-objc-internal.h',
+      'AsyncDisplayKit/Details/ASDealloc2MainObject.h',
+      'AsyncDisplayKit/Details/ASDealloc2MainObject.m',
+    ]
   end
 
   spec.social_media_url = 'https://twitter.com/fbOpenSource'

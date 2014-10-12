@@ -113,7 +113,7 @@
   dispatch_group_async(_group, queue, ^{
     @autoreleasepool {
       if (_state != ASAsyncTransactionStateCanceled) {
-          operation.value = block();
+        operation.value = block();
       }
     }
   });
@@ -149,7 +149,6 @@
   } else {
     ASDisplayNodeAssert(_group != NULL, @"If there are operations, dispatch group should have been created");
     dispatch_group_notify(_group, _callbackQueue, ^{
-//      NSLog(@"NOTIFYING DISPATCH GROUP DONE FOR NUMBER OF OPS: %@", @([_operations count]));
       BOOL isCanceled = (_state == ASAsyncTransactionStateCanceled);
       for (ASDisplayNodeAsyncTransactionOperation *operation in _operations) {
         [operation callAndReleaseCompletionBlock:isCanceled];

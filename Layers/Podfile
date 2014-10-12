@@ -5,7 +5,3 @@ target "Layers" do
   pod 'AsyncDisplayKit', :git => 'https://github.com/facebook/AsyncDisplayKit.git'
 end
 
-target "LayersTests" do
-
-end
-
