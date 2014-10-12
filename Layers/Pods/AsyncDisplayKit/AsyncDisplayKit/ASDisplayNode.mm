@@ -1290,7 +1290,7 @@ static void _recursiveSetPreventOrCancelDisplay(ASDisplayNode *node, CALayer *la
   // Set the flag on the node.  If this is a pure layer (no node) then this has no effect (plain layers don't support preventing/cancelling display).
   node.preventOrCancelDisplay = flag;
 
-  if (layer) {
+  if (layer && !node.shouldRasterizeDescendants) {
     // If there is a layer, recurse down the layer hierarchy to set the flag on descendants.  This will cover both layer-based and node-based children.
     for (CALayer *sublayer in layer.sublayers) {
       _recursiveSetPreventOrCancelDisplay(nil, sublayer, flag);

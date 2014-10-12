@@ -30,7 +30,6 @@ class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
     return numberOfRows
   }
   
-  // TODO: Return tuple with row and column
   func rowForItemAtIndex(index: Int) -> Int {
     return ((index + 1)/2 + (index + 1)%2) - 1
   }
@@ -59,7 +58,6 @@ class OneColumnLayoutMetrics: RainforestLayoutMetrics {
     return numberOfItems
   }
   
-  // TODO: Return tuple with row and column
   func rowForItemAtIndex(index: Int) -> Int {
     return index
   }
@@ -96,41 +94,37 @@ enum RainforestLayoutType {
   }
 }
 
-
-// TODO: Remove public from everywhere in this file
-public class RainforestCollectionViewLayout: UICollectionViewLayout {
+class RainforestCollectionViewLayout: UICollectionViewLayout {
   var allLayoutAttributes = [UICollectionViewLayoutAttributes]()
   let cellDefaultHeight = 10
-  let cellWidth = 320
-  // TODO: Turn this into a struct.
-//  let interCellHorizontalSpacing = 20
+  let cellWidth = Int(FrameCalculator.cardWidth)
   let interCellVerticalSpacing = 10
   var contentMaxY: CGFloat = 0
   let layoutType: RainforestLayoutType
   let layoutMetrics: RainforestLayoutMetrics
   
    init(type: RainforestLayoutType) {
-    self.layoutType = type
-    self.layoutMetrics = type.metrics()
+    layoutType = type
+    layoutMetrics = type.metrics()
     super.init()
   }
   
   override init() {
-    self.layoutType = .TwoColumn
-    self.layoutMetrics = self.layoutType.metrics()
+    layoutType = .TwoColumn
+    layoutMetrics = layoutType.metrics()
     super.init()
   }
   
-  required public init(coder aDecoder: NSCoder) {
-    self.layoutType = .TwoColumn
-    self.layoutMetrics = self.layoutType.metrics()
+  required init(coder aDecoder: NSCoder) {
+    layoutType = .TwoColumn
+    layoutMetrics = layoutType.metrics()
     super.init(coder: aDecoder)
   }
   
-  override public func prepareLayout() {
+  override func prepareLayout() {
     super.prepareLayout()
-    if self.allLayoutAttributes.count == 0 {
-      self.populateLayoutAttributes()
+    if allLayoutAttributes.count == 0 {
+      populateLayoutAttributes()
     }
   }
   
@@ -140,84 +134,74 @@ public class RainforestCollectionViewLayout: UICollectionViewLayout {
     }
     let collectionView = self.collectionView!
     
-    self.allLayoutAttributes.removeAll(keepCapacity: true)
+    allLayoutAttributes.removeAll(keepCapacity: true)
     for i in 0 ..< collectionView.numberOfItemsInSection(0) {
       let la = UICollectionViewLayoutAttributes(forCellWithIndexPath: NSIndexPath(forItem: i, inSection: 0))
-      let row = self.layoutMetrics.rowForItemAtIndex(i)
-      let column = self.layoutMetrics.columnForItemAtIndex(i)
-      let x = (column * self.cellWidth) + (self.layoutMetrics.interCellHorizontalSpacing() * (column + 1))
-      let y = (row * self.cellDefaultHeight) + (self.interCellVerticalSpacing * (row + 1))
-      la.frame = CGRect(x: x, y: y, width: self.cellWidth, height: self.cellDefaultHeight)
-      self.allLayoutAttributes.append(la)
-      if la.frame.maxY > self.contentMaxY {
-        self.contentMaxY = ceil(la.frame.maxY)
+      let row = layoutMetrics.rowForItemAtIndex(i)
+      let column = layoutMetrics.columnForItemAtIndex(i)
+      let x = (column * cellWidth) + (layoutMetrics.interCellHorizontalSpacing() * (column + 1))
+      let y = (row * cellDefaultHeight) + (interCellVerticalSpacing * (row + 1))
+      la.frame = CGRect(x: x, y: y, width: cellWidth, height: cellDefaultHeight)
+      allLayoutAttributes.append(la)
+      if la.frame.maxY > contentMaxY {
+        contentMaxY = ceil(la.frame.maxY)
       }
     }
   }
   
-  override public func collectionViewContentSize() -> CGSize {
+  override func collectionViewContentSize() -> CGSize {
     if self.collectionView == nil {
       return CGSizeZero
     }
     let collectionView = self.collectionView!
     
-//    println("\n\n CALCULATED CONTENT SIZE: \(CGSize(width: 660, height: height)) \n\n ")
-    let contentWidth = self.layoutMetrics.contentWidth(self.cellWidth, horizontalSpacing: self.layoutMetrics.interCellHorizontalSpacing())
-    return CGSize(width: contentWidth, height: Int(self.contentMaxY))
+    let contentWidth = layoutMetrics.contentWidth(cellWidth, horizontalSpacing: layoutMetrics.interCellHorizontalSpacing())
+    return CGSize(width: contentWidth, height: Int(contentMaxY))
   }
   
-  override public func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
+  override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
     var layoutAttributes = [UICollectionViewLayoutAttributes]()
-    for i in 0 ..< self.allLayoutAttributes.count {
-      let la = self.allLayoutAttributes[i]
+    for i in 0 ..< allLayoutAttributes.count {
+      let la = allLayoutAttributes[i]
       if rect.contains(la.frame) {
         layoutAttributes.append(la)
       }
     }
-    return self.allLayoutAttributes
+    return allLayoutAttributes
   }
   
-  override public func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
-    if indexPath.item >= self.allLayoutAttributes.count { return nil }
-    return self.allLayoutAttributes[indexPath.item]
+  override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
+    if indexPath.item >= allLayoutAttributes.count { return nil }
+    return allLayoutAttributes[indexPath.item]
   }
   
-  override public func shouldInvalidateLayoutForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+  override func shouldInvalidateLayoutForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
     return true
   }
   
-  override public func invalidationContextForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
+  override func invalidationContextForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
     
-    let indexForItemAbove = self.layoutMetrics.indexForItemAboveItemAtIndex(originalAttributes.indexPath.item)
-    let layoutAttributesForItemAbove = self.allLayoutAttributes[indexForItemAbove]
-    
-//    if originalAttributes.indexPath.item == 4 {
-//      println("Cell at i4, above la: \n \(layoutAttributesForItemAbove) \n\n ")
-//    }
+    let indexForItemAbove = layoutMetrics.indexForItemAboveItemAtIndex(originalAttributes.indexPath.item)
+    let layoutAttributesForItemAbove = allLayoutAttributes[indexForItemAbove]
     
     if originalAttributes.indexPath.item != indexForItemAbove {
-      preferredAttributes.frame.origin.y = layoutAttributesForItemAbove.frame.maxY + CGFloat(self.interCellVerticalSpacing)
+      preferredAttributes.frame.origin.y = layoutAttributesForItemAbove.frame.maxY + CGFloat(interCellVerticalSpacing)
     } else {
       preferredAttributes.frame.origin.y = 0
     }
     
-    self.allLayoutAttributes[originalAttributes.indexPath.item] = preferredAttributes
-
-    if originalAttributes.indexPath.item == 9 {
-//      println(self.allLayoutAttributes)
-//      println("\n\n ACTUAL CONTENT SIZE: \(self.collectionView?.contentSize) \n\n ")
+    allLayoutAttributes[originalAttributes.indexPath.item] = preferredAttributes
+    
+    let invalidationContext = super.invalidationContextForPreferredLayoutAttributes(preferredAttributes, withOriginalAttributes: originalAttributes)
+    invalidationContext.invalidateItemsAtIndexPaths([originalAttributes.indexPath])
+    
+    if preferredAttributes.frame.maxY > contentMaxY {
+     invalidationContext.contentSizeAdjustment = CGSize(width: 1, height: preferredAttributes.frame.maxY - contentMaxY)
+      contentMaxY = ceil(preferredAttributes.frame.maxY)
+      invalidationContext.contentOffsetAdjustment = CGPoint(x: 0, y: 1)
     }
     
-    let ic = super.invalidationContextForPreferredLayoutAttributes(preferredAttributes, withOriginalAttributes: originalAttributes)
-    ic.invalidateItemsAtIndexPaths([originalAttributes.indexPath])
-    
-    if preferredAttributes.frame.maxY > self.contentMaxY {
-     ic.contentSizeAdjustment = CGSize(width: 1, height: preferredAttributes.frame.maxY - self.contentMaxY)
-      self.contentMaxY = ceil(preferredAttributes.frame.maxY)
-      ic.contentOffsetAdjustment = CGPoint(x: 0, y: 1)
-    }
-    
-    return ic
+    return invalidationContext
   }
   
 }

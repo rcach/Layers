@@ -9,7 +9,7 @@
 import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
-  var nodeConstructionOperation: NSBlockOperation?
+  var nodeConstructionOperation: NSOperation?
   
   var featureImageSizeOptional: CGSize?
   
@@ -17,18 +17,18 @@ class RainforestCardCell: UICollectionViewCell {
   var backgroundBlurNode: ASImageNode?
   
   var contentLayer: CALayer?
-  var placeholderLayer: CALayer?
+  var placeholderLayer: CALayer!
 
   
   override func awakeFromNib() {
     super.awakeFromNib()
     
-    self.placeholderLayer = CALayer()
-    self.placeholderLayer?.contents = UIImage(named: "placeholder").CGImage
-    self.placeholderLayer?.contentsGravity = kCAGravityCenter
-    self.placeholderLayer?.contentsScale = UIScreen.mainScreen().scale
-    self.placeholderLayer?.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
-    self.contentView.layer.addSublayer(self.placeholderLayer)
+    placeholderLayer = CALayer()
+    placeholderLayer.contents = UIImage(named: "placeholder").CGImage
+    placeholderLayer.contentsGravity = kCAGravityCenter
+    placeholderLayer.contentsScale = UIScreen.mainScreen().scale
+    placeholderLayer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
+    contentView.layer.addSublayer(placeholderLayer)
   }
 
   //MARK: Layout
@@ -36,8 +36,7 @@ class RainforestCardCell: UICollectionViewCell {
     if let featureImageSize = featureImageSizeOptional {
       return FrameCalculator.sizeThatFits(size, withImageSize: featureImageSize)
     } else {
-      //TODO: Assert
-      return CGSize(width: size.width, height: 0)
+      return CGSizeZero
     }
   }
   
@@ -46,7 +45,7 @@ class RainforestCardCell: UICollectionViewCell {
     
     CATransaction.begin()
     CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-    self.placeholderLayer?.frame = self.bounds
+    placeholderLayer?.frame = bounds
     CATransaction.commit()
   }
   
@@ -54,9 +53,10 @@ class RainforestCardCell: UICollectionViewCell {
   override func prepareForReuse() {
     super.prepareForReuse()
     
-    // TODO: Cancel expensive operations.
     containerNode?.recursiveSetPreventOrCancelDisplay(true)
+    //FIXME: Remove backgroundBlurNode stored property once AsyncDisplayKit pull request #41 is merged.
     backgroundBlurNode?.preventOrCancelDisplay = true
+    
     if let operation = nodeConstructionOperation {
       operation.cancel()
     }
@@ -65,22 +65,24 @@ class RainforestCardCell: UICollectionViewCell {
     containerNode = nil
   }
   
-  //TODO: Remove this method.
-  func removeAllContentViewSublayers() {
-    if let sublayers = self.contentView.layer.sublayers {
-      for layer in sublayers as [CALayer] {
-        if layer !== self.placeholderLayer {
-          layer.removeFromSuperlayer()
-        }
-      }
+  func configureCellForDisplay(#cardInfo: RainforestCardInfo, nodeConstructionQueue: NSOperationQueue) {
+    if let oldNodeConstructionOperation = nodeConstructionOperation {
+      oldNodeConstructionOperation.cancel()
     }
+    
+    let image = UIImage(named: cardInfo.imageName)
+    featureImageSizeOptional = image.size
+    
+    let newNodeConstructionOperation = nodeConstructionOperationWithCardInfo(cardInfo, image: image)
+    nodeConstructionOperation = newNodeConstructionOperation
+    nodeConstructionQueue.addOperation(newNodeConstructionOperation)
   }
   
   //MARK: Nodes
   func nodeConstructionOperationWithCardInfo(cardInfo: RainforestCardInfo, image: UIImage) -> NSOperation {
     let nodeConstructionOperation = NSBlockOperation()
-    nodeConstructionOperation.addExecutionBlock { [unowned nodeConstructionOperation, weak self] in
-      
+    nodeConstructionOperation.addExecutionBlock {
+      [unowned nodeConstructionOperation, weak self] in
       
       
       // 0: Preflight check
@@ -93,9 +95,7 @@ class RainforestCardCell: UICollectionViewCell {
       if NSThread.isMainThread() {
         return
       }
-      // TODO: Does Swift automatically promote weak capture var to Strong?
       let cell = self!
-      
       
       
       // 1: Build all subnodes
@@ -115,7 +115,7 @@ class RainforestCardCell: UICollectionViewCell {
         
         let tintColor = UIColor(white: 0.5, alpha: 0.3)
         let didCancelBlur: () -> Bool = {
-          return backgroundImageNode == nil || backgroundImageNode!.isCancelled()
+          return backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
         }
         
         if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor, saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
@@ -139,7 +139,6 @@ class RainforestCardCell: UICollectionViewCell {
       gradientNode.layerBacked = true
       
       
-      
       // 2: Build container node and construct node hierarchy
       let containerNode = ASDisplayNode(layerClass: LAAnimatedDisplayLayer.self)
       containerNode.layerBacked = true
@@ -152,7 +151,6 @@ class RainforestCardCell: UICollectionViewCell {
       containerNode.addSubnode(descriptionTextNode)
       
       
-      
       // 3: Layout nodes
       containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
       backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
@@ -162,12 +160,10 @@ class RainforestCardCell: UICollectionViewCell {
       descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
       
       
-      
       // 4: Fast return if operation cancelled
       if nodeConstructionOperation.cancelled {
         return
       }
-      
       
       
       // 5: Get on main thread and add container node's layer to cell's content view
@@ -180,15 +176,13 @@ class RainforestCardCell: UICollectionViewCell {
         }
         cell.containerNode = containerNode
         cell.backgroundBlurNode = backgroundImageNode
-        cell.contentLayer = containerNode.layer
-        cell.contentView.layer.addSublayer(cell.contentLayer)
+        
+        cell.contentView.layer.addSublayer(containerNode.layer)
         containerNode.layer.setNeedsDisplay()
+        cell.contentLayer = containerNode.layer
       }
     }
-
     
-    // TODO: Method doesn't say that this assignment happens.
-    self.nodeConstructionOperation = nodeConstructionOperation
     return nodeConstructionOperation
   }
 

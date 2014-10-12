@@ -10,6 +10,10 @@ class FrameCalculator {
   class var textAreaHeight: CGFloat {
     return 300.0
   }
+  
+  class var cardWidth: CGFloat {
+    return 320.0
+  }
 
   class func frameForDescriptionText(#containerBounds: CGRect, featureImageFrame: CGRect) -> CGRect {
     return CGRectMake(24.0, featureImageFrame.maxY + 20.0, containerBounds.width - 48.0, textAreaHeight)
@@ -33,12 +37,11 @@ class FrameCalculator {
   }
   
   class func frameForContainer(#featureImageSize: CGSize) -> CGRect {
-    let containerWidth: CGFloat = 320.0 //TODO: Remove hardcoded value?
+    let containerWidth: CGFloat = cardWidth
     let size = sizeThatFits(CGSizeMake(containerWidth, CGFloat.max), withImageSize: featureImageSize)
     return CGRect(x: 0, y: 0, width: containerWidth, height: size.height)
   }
   
-  //TODO: Consolodate into one method inside Cell or call from cell.
   class func sizeThatFits(size: CGSize, withImageSize imageSize: CGSize) -> CGSize {
     let imageFrameSize = aspectSizeForWidth(size.width, originalSize: imageSize)
     return CGSize(width: size.width, height: imageFrameSize.height + textAreaHeight)
