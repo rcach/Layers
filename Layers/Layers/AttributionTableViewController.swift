@@ -9,7 +9,7 @@
 import UIKit
 
 class AttributionTableViewController: UITableViewController {
-  let rainforestCardsInfo = allLifeforms()
+  let rainforestCardsInfo = getAllCardInfo()
   
   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
     return 1

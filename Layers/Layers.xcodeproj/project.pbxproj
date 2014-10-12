@@ -10,7 +10,6 @@
 		0D5336B43557439EB31EADCF /* libPods-Layers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A16CEE3C744E318A68991B /* libPods-Layers.a */; };
 		20101BE219CF2E7900E363A8 /* RainforestCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE119CF2E7900E363A8 /* RainforestCardInfo.swift */; };
 		20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE419CF36B400E363A8 /* LAGradientNode.mm */; };
-		20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE619CF467700E363A8 /* NodeFactory.swift */; };
 		20101BE919CF4E9300E363A8 /* FrameCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20101BE819CF4E9300E363A8 /* FrameCalculator.swift */; };
 		202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */; };
 		202BB8CA19E83787009CD152 /* ASDisplayNode+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 202BB8C919E83787009CD152 /* ASDisplayNode+Extras.m */; };
@@ -20,8 +19,8 @@
 		2061349419B53BE200888CAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2061349219B53BE200888CAB /* Main.storyboard */; };
 		2061349619B53BE200888CAB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2061349519B53BE200888CAB /* Images.xcassets */; };
 		206134AC19B53F8000888CAB /* RainforestCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206134AB19B53F8000888CAB /* RainforestCardCell.swift */; };
+		206EF71B19E9E059008EA306 /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206EF71A19E9E059008EA306 /* Factories.swift */; };
 		207A0E6A19C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */; };
-		2094AC3319E4D0AA00AF33ED /* RainforestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */; };
 		20A29BFC19B55FA3007FF4F2 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */; };
 		20D857E019E7744C00C74F2D /* AttributionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -30,7 +29,6 @@
 		20101BE119CF2E7900E363A8 /* RainforestCardInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardInfo.swift; sourceTree = "<group>"; };
 		20101BE319CF36B400E363A8 /* LAGradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAGradientNode.h; sourceTree = "<group>"; };
 		20101BE419CF36B400E363A8 /* LAGradientNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LAGradientNode.mm; sourceTree = "<group>"; };
-		20101BE619CF467700E363A8 /* NodeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeFactory.swift; sourceTree = "<group>"; };
 		20101BE819CF4E9300E363A8 /* FrameCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameCalculator.swift; sourceTree = "<group>"; };
 		202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributionTableViewCell.swift; sourceTree = "<group>"; };
 		202BB8C819E83787009CD152 /* ASDisplayNode+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ASDisplayNode+Extras.h"; sourceTree = "<group>"; };
@@ -43,9 +41,9 @@
 		2061349319B53BE200888CAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2061349519B53BE200888CAB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		206134AB19B53F8000888CAB /* RainforestCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardCell.swift; sourceTree = "<group>"; };
+		206EF71A19E9E059008EA306 /* Factories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Factories.swift; sourceTree = "<group>"; };
 		207A0E6819C650DD00F6AAB6 /* LAAnimatedDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAAnimatedDisplayLayer.h; sourceTree = "<group>"; };
 		207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAAnimatedDisplayLayer.m; sourceTree = "<group>"; };
-		2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RainforestCardView.swift; sourceTree = "<group>"; };
 		20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Layers-Bridging-Header.h"; sourceTree = "<group>"; };
 		20A29BFA19B55FA3007FF4F2 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
@@ -91,8 +89,6 @@
 				20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */,
 				2061349019B53BE200888CAB /* RainforestViewController.swift */,
 				206134AB19B53F8000888CAB /* RainforestCardCell.swift */,
-				20101BE619CF467700E363A8 /* NodeFactory.swift */,
-				2094AC3219E4D0AA00AF33ED /* RainforestCardView.swift */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -125,6 +121,7 @@
 				202BB8C619E77A25009CD152 /* AttributionTableViewCell.swift */,
 				202BB8C819E83787009CD152 /* ASDisplayNode+Extras.h */,
 				202BB8C919E83787009CD152 /* ASDisplayNode+Extras.m */,
+				206EF71A19E9E059008EA306 /* Factories.swift */,
 			);
 			name = Private;
 			sourceTree = "<group>";
@@ -245,7 +242,7 @@
 				20A29BFC19B55FA3007FF4F2 /* UIImage+ImageEffects.m in Sources */,
 				2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */,
 				20101BE919CF4E9300E363A8 /* FrameCalculator.swift in Sources */,
-				20101BE719CF467700E363A8 /* NodeFactory.swift in Sources */,
+				206EF71B19E9E059008EA306 /* Factories.swift in Sources */,
 				202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */,
 				20101BE219CF2E7900E363A8 /* RainforestCardInfo.swift in Sources */,
 				2061348F19B53BE200888CAB /* AppDelegate.swift in Sources */,
@@ -255,7 +252,6 @@
 				202BB8CA19E83787009CD152 /* ASDisplayNode+Extras.m in Sources */,
 				20101BE519CF36B400E363A8 /* LAGradientNode.mm in Sources */,
 				203646AA19DD00980085BFD5 /* RainforestCollectionViewLayout.swift in Sources */,
-				2094AC3319E4D0AA00AF33ED /* RainforestCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

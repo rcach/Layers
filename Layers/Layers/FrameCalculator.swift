@@ -8,7 +8,6 @@
 
 class FrameCalculator {
   class var textAreaHeight: CGFloat {
-    //TODO: This constant is also inside the cell class, consolidate.
     return 300.0
   }
 

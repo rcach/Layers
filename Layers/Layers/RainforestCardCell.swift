@@ -13,20 +13,12 @@ class RainforestCardCell: UICollectionViewCell {
   
   var featureImageSizeOptional: CGSize?
   
-  var contentNode: ASDisplayNode?
+  var containerNode: ASDisplayNode?
   var backgroundBlurNode: ASImageNode?
-  
-  let textAreaHeight: CGFloat = 300.0
   
   var contentLayer: CALayer?
   var placeholderLayer: CALayer?
-  
-  var cardView: RainforestCardView
-  
-  required init(coder aDecoder: NSCoder) {
-    cardView = RainforestCardView()
-    super.init(coder: aDecoder)
-  }
+
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -41,24 +33,12 @@ class RainforestCardCell: UICollectionViewCell {
 
   //MARK: Layout
   override func sizeThatFits(size: CGSize) -> CGSize {
-    return threadSafeSizeThatFits(size)
-  }
-  
-  func threadSafeSizeThatFits(size: CGSize) -> CGSize {
-    if let featureImageViewFrame = featureImageViewFrameWithWidth(size.width) {
-      return CGSize(width: size.width, height: featureImageViewFrame.maxY + textAreaHeight)
+    if let featureImageSize = featureImageSizeOptional {
+      return FrameCalculator.sizeThatFits(size, withImageSize: featureImageSize)
     } else {
-      return CGSize(width: size.width, height: 10.0)
+      //TODO: Assert
+      return CGSize(width: size.width, height: 0)
     }
-  }
-  
-  func featureImageViewFrameWithWidth(width: CGFloat) -> CGRect? {
-    // TODO: Handle 1.0 scale.
-    if let imageSize = featureImageSizeOptional {
-      let height = (imageSize.height / imageSize.width) * width
-      return CGRectMake(0, 0, width, height)
-    }
-    return nil
   }
   
   override func layoutSubviews() {
@@ -70,23 +50,19 @@ class RainforestCardCell: UICollectionViewCell {
     CATransaction.commit()
   }
   
-  func layoutCellContent() {
-    
-  }
-  
   //MARK: Cell Reuse
   override func prepareForReuse() {
     super.prepareForReuse()
     
     // TODO: Cancel expensive operations.
-    contentNode?.recursiveSetPreventOrCancelDisplay(true)
+    containerNode?.recursiveSetPreventOrCancelDisplay(true)
     backgroundBlurNode?.preventOrCancelDisplay = true
     if let operation = nodeConstructionOperation {
       operation.cancel()
     }
     contentLayer?.removeFromSuperlayer()
     contentLayer = nil
-    contentNode = nil
+    containerNode = nil
   }
   
   //TODO: Remove this method.
@@ -101,9 +77,13 @@ class RainforestCardCell: UICollectionViewCell {
   }
   
   //MARK: Nodes
-  func nodeConstructionOperationWithLifeform(lifeform: RainforestCardInfo, image: UIImage) -> NSOperation {
+  func nodeConstructionOperationWithCardInfo(cardInfo: RainforestCardInfo, image: UIImage) -> NSOperation {
     let nodeConstructionOperation = NSBlockOperation()
     nodeConstructionOperation.addExecutionBlock { [unowned nodeConstructionOperation, weak self] in
+      
+      
+      
+      // 0: Preflight check
       if nodeConstructionOperation.cancelled {
         return
       }
@@ -113,61 +93,100 @@ class RainforestCardCell: UICollectionViewCell {
       if NSThread.isMainThread() {
         return
       }
-      
       // TODO: Does Swift automatically promote weak capture var to Strong?
-      let realCell = self!
-      let lifeformImage = image
+      let cell = self!
       
-      let featureImageNode = NodeFactory.createNewFeatureImageNodeWithImage(lifeformImage)
-      let backgroundImageNode = NodeFactory.createNewBackgroundImageNodeWithImage(lifeformImage)
-      let descriptionTextNode = NodeFactory.createNewDescriptionNodeWithString(lifeform.description)
-      let titleTextNode = NodeFactory.createNewTitleNodeWithString(lifeform.name)
-      let gradientNode = NodeFactory.createNewGradientNode()
       
-      if nodeConstructionOperation.cancelled {
-        return
+      
+      // 1: Build all subnodes
+      let featureImageNode = ASImageNode()
+      featureImageNode.layerBacked = true
+      featureImageNode.contentMode = UIViewContentMode.ScaleAspectFit
+      featureImageNode.image = image
+      
+      let backgroundImageNode = ASImageNode()
+      backgroundImageNode.layerBacked = true
+      backgroundImageNode.contentMode = .ScaleAspectFill
+      backgroundImageNode.image = image
+      backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] (input: UIImage!) -> UIImage in
+        if input == nil {
+          return input
+        }
+        
+        let tintColor = UIColor(white: 0.5, alpha: 0.3)
+        let didCancelBlur: () -> Bool = {
+          return backgroundImageNode == nil || backgroundImageNode!.isCancelled()
+        }
+        
+        if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor, saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
+          return blurredImage
+        } else {
+          return image
+        }
       }
       
-      let contentNode = NodeFactory.createNewContentNode()
-      contentNode.addSubnode(backgroundImageNode)
-      contentNode.addSubnode(featureImageNode)
-      contentNode.addSubnode(gradientNode)
-      contentNode.addSubnode(titleTextNode)
-      contentNode.addSubnode(descriptionTextNode)
+      let descriptionTextNode = ASTextNode()
+      descriptionTextNode.layerBacked = true
+      descriptionTextNode.backgroundColor = UIColor.clearColor()
+      descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
       
-      if nodeConstructionOperation.cancelled {
-        return
-      }
+      let titleTextNode = ASTextNode()
+      titleTextNode.layerBacked = true
+      titleTextNode.backgroundColor = UIColor.clearColor()
+      titleTextNode.attributedString = NSAttributedString.attributesStringForTitleText(cardInfo.name)
       
-      //TODO: Rename contentNode to container node.
-      //TODO: Pass in image size straight up, without grabbing image from node.
-      contentNode.frame = FrameCalculator.frameForContainer(featureImageSize: featureImageNode.image.size)
-      backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: contentNode.bounds)
-      //TODO: Pass in image size straight up, without grabbing image from node.
-      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageNode.image.size, containerFrameWidth: contentNode.frame.size.width)
+      let gradientNode = LAGradientNode()
+      gradientNode.layerBacked = true
+      
+      
+      
+      // 2: Build container node and construct node hierarchy
+      let containerNode = ASDisplayNode(layerClass: LAAnimatedDisplayLayer.self)
+      containerNode.layerBacked = true
+      containerNode.shouldRasterizeDescendants = true
+      
+      containerNode.addSubnode(backgroundImageNode)
+      containerNode.addSubnode(featureImageNode)
+      containerNode.addSubnode(gradientNode)
+      containerNode.addSubnode(titleTextNode)
+      containerNode.addSubnode(descriptionTextNode)
+      
+      
+      
+      // 3: Layout nodes
+      containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
+      backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
+      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size, containerFrameWidth: containerNode.frame.size.width)
       gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
-      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: contentNode.bounds, featureImageFrame: featureImageNode.frame)
-      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: contentNode.bounds, featureImageFrame: featureImageNode.frame)
+      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
+      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
       
+      
+      
+      // 4: Fast return if operation cancelled
       if nodeConstructionOperation.cancelled {
         return
       }
       
-      dispatch_async(dispatch_get_main_queue()) { [nodeConstructionOperation, realCell] in
+      
+      
+      // 5: Get on main thread and add container node's layer to cell's content view
+      dispatch_async(dispatch_get_main_queue()) {
         if nodeConstructionOperation.cancelled {
           return
         }
-        if realCell.nodeConstructionOperation !== nodeConstructionOperation {
+        if cell.nodeConstructionOperation !== nodeConstructionOperation {
           return
         }
-        realCell.contentNode = contentNode
-        realCell.backgroundBlurNode = backgroundImageNode
-        realCell.contentLayer = contentNode.layer
-        realCell.contentView.layer.addSublayer(realCell.contentLayer)
-        contentNode.layer.setNeedsDisplay()
+        cell.containerNode = containerNode
+        cell.backgroundBlurNode = backgroundImageNode
+        cell.contentLayer = containerNode.layer
+        cell.contentView.layer.addSublayer(cell.contentLayer)
+        containerNode.layer.setNeedsDisplay()
       }
-      
     }
+
+    
     // TODO: Method doesn't say that this assignment happens.
     self.nodeConstructionOperation = nodeConstructionOperation
     return nodeConstructionOperation
