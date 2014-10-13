@@ -84,7 +84,7 @@ enum RainforestLayoutType {
 
 class RainforestCollectionViewLayout: UICollectionViewLayout {
   var allLayoutAttributes = [UICollectionViewLayoutAttributes]()
-  let cellDefaultHeight = 10
+  let cellDefaultHeight = 300
   let cellWidth = Int(FrameCalculator.cardWidth)
   let interCellVerticalSpacing = 10
   let interCellHorizontalSpacing = 10
@@ -198,9 +198,8 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     invalidationContext.invalidateItemsAtIndexPaths([originalAttributes.indexPath])
     
     if preferredAttributes.frame.maxY > contentMaxY {
-     invalidationContext.contentSizeAdjustment = CGSize(width: 1, height: preferredAttributes.frame.maxY - contentMaxY)
+     invalidationContext.contentSizeAdjustment = CGSize(width: 0, height: preferredAttributes.frame.maxY - contentMaxY)
       contentMaxY = ceil(preferredAttributes.frame.maxY)
-      invalidationContext.contentOffsetAdjustment = CGPoint(x: 0, y: 1)
     }
     
     return invalidationContext
