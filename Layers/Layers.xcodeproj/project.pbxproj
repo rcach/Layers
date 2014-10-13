@@ -90,7 +90,7 @@
 				20101BE419CF36B400E363A8 /* LAGradientNode.mm */,
 				207A0E6819C650DD00F6AAB6 /* LAAnimatedDisplayLayer.h */,
 				207A0E6919C650DD00F6AAB6 /* LAAnimatedDisplayLayer.m */,
-				2094AC3119E4CE1F00AF33ED /* OtherFiles */,
+				2094AC3119E4CE1F00AF33ED /* Other Files */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -130,7 +130,7 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
-		2094AC3119E4CE1F00AF33ED /* OtherFiles */ = {
+		2094AC3119E4CE1F00AF33ED /* Other Files */ = {
 			isa = PBXGroup;
 			children = (
 				2061348E19B53BE200888CAB /* AppDelegate.swift */,
@@ -143,7 +143,7 @@
 				206EF71D19EB2915008EA306 /* Data */,
 				206EF71C19EB28F5008EA306 /* AttributionScreen */,
 			);
-			name = OtherFiles;
+			name = "Other Files";
 			sourceTree = "<group>";
 		};
 		B81D8E7235C34FD1A79601C7 /* Frameworks */ = {

@@ -15,7 +15,6 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
                             
   override func viewDidLoad() {
     super.viewDidLoad()
-    collectionView?.backgroundView = UIImageView(image: UIImage(named: "background"))
   }
   
   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -29,4 +28,3 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
     return cell
   }
 }
-

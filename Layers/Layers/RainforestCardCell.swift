@@ -178,6 +178,8 @@ class RainforestCardCell: UICollectionViewCell {
         cell.backgroundBlurNode = backgroundImageNode
         
         cell.contentView.layer.addSublayer(containerNode.layer)
+        containerNode.layer.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
+        containerNode.layer.borderWidth = 1
         containerNode.layer.setNeedsDisplay()
         cell.contentLayer = containerNode.layer
       }

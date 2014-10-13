@@ -15,7 +15,7 @@ protocol RainforestLayoutMetrics {
   func columnForItemAtIndex(index: Int) -> Int
   func indexForItemAboveItemAtIndex(index: Int) -> Int
   func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int
-  func interCellHorizontalSpacing() -> Int
+  func numberOfColumns() -> Int
 }
 
 class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
@@ -43,15 +43,15 @@ class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
     return aboveItemIndex >= 0 ? aboveItemIndex : index
   }
   
+  // TODO: Fix this, it should take the cv's frame width into consideration.
   func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int {
-    return horizontalSpacing + cellWidth + horizontalSpacing + cellWidth + horizontalSpacing
+    return cellWidth + horizontalSpacing + cellWidth
   }
   
-  func interCellHorizontalSpacing() -> Int {
-    return 20
+  func numberOfColumns() -> Int {
+    return 2
   }
 }
-
 
 class OneColumnLayoutMetrics: RainforestLayoutMetrics {
   func numberOfRowsForNumberOfItems(numberOfItems: Int) -> Int {
@@ -75,8 +75,8 @@ class OneColumnLayoutMetrics: RainforestLayoutMetrics {
     return horizontalSpacing + cellWidth + horizontalSpacing
   }
   
-  func interCellHorizontalSpacing() -> Int {
-    return 0
+  func numberOfColumns() -> Int {
+    return 1
   }
 }
 
@@ -99,9 +99,10 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
   let cellDefaultHeight = 10
   let cellWidth = Int(FrameCalculator.cardWidth)
   let interCellVerticalSpacing = 10
+  let interCellHorizontalSpacing = 10
   var contentMaxY: CGFloat = 0
-  let layoutType: RainforestLayoutType
-  let layoutMetrics: RainforestLayoutMetrics
+  var layoutType: RainforestLayoutType
+  var layoutMetrics: RainforestLayoutMetrics
   
    init(type: RainforestLayoutType) {
     layoutType = type
@@ -124,6 +125,14 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
   override func prepareLayout() {
     super.prepareLayout()
     if allLayoutAttributes.count == 0 {
+      if let collectionView = self.collectionView {
+        //TODO: Fix this.
+        if collectionView.frame.size.width < CGFloat((self.cellWidth * 2.0) + interCellHorizontalSpacing) {
+          layoutType = .OneColumn
+          layoutMetrics = layoutType.metrics()
+        }
+      }
+      
       populateLayoutAttributes()
     }
   }
@@ -134,13 +143,21 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     }
     let collectionView = self.collectionView!
     
+    // Calculate left margin max x.
+    let totalWidthOfCellsInARow = layoutMetrics.numberOfColumns() * cellWidth
+    let totalSpaceBetweenCellsInARow = interCellHorizontalSpacing * max(0, layoutMetrics.numberOfColumns() - 1)
+    let totalCellAndSpaceWidth = totalWidthOfCellsInARow + totalSpaceBetweenCellsInARow
+    let totalHorizontalMargin = collectionView.frame.size.width - CGFloat(totalCellAndSpaceWidth)
+    let leftMarginMaxX = totalHorizontalMargin / CGFloat(2.0)
+    
     allLayoutAttributes.removeAll(keepCapacity: true)
     for i in 0 ..< collectionView.numberOfItemsInSection(0) {
       let la = UICollectionViewLayoutAttributes(forCellWithIndexPath: NSIndexPath(forItem: i, inSection: 0))
       let row = layoutMetrics.rowForItemAtIndex(i)
       let column = layoutMetrics.columnForItemAtIndex(i)
-      let x = (column * cellWidth) + (layoutMetrics.interCellHorizontalSpacing() * (column + 1))
+      let x = ((cellWidth + interCellHorizontalSpacing) * column) + Int(leftMarginMaxX)
       let y = (row * cellDefaultHeight) + (interCellVerticalSpacing * (row + 1))
+
       la.frame = CGRect(x: x, y: y, width: cellWidth, height: cellDefaultHeight)
       allLayoutAttributes.append(la)
       if la.frame.maxY > contentMaxY {
@@ -155,7 +172,7 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     }
     let collectionView = self.collectionView!
     
-    let contentWidth = layoutMetrics.contentWidth(cellWidth, horizontalSpacing: layoutMetrics.interCellHorizontalSpacing())
+    let contentWidth = layoutMetrics.contentWidth(cellWidth, horizontalSpacing: interCellHorizontalSpacing)
     return CGSize(width: contentWidth, height: Int(contentMaxY))
   }
   

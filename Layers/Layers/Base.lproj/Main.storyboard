@@ -31,7 +31,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="fyX-Sc-SKf">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Dx5-Zn-3iB" customClass="RainforestCollectionViewLayout" customModule="Layers" customModuleProvider="target">
                             <size key="itemSize" width="320" height="500"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
