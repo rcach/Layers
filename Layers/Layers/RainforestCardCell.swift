@@ -96,7 +96,7 @@ class RainforestCardCell: UICollectionViewCell {
       // 1: Build all subnodes
       let featureImageNode = ASImageNode()
       featureImageNode.layerBacked = true
-      featureImageNode.contentMode = UIViewContentMode.ScaleAspectFit
+      featureImageNode.contentMode = .ScaleAspectFit
       featureImageNode.image = image
       
       let backgroundImageNode = ASImageNode()
