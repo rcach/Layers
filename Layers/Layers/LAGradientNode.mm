@@ -26,8 +26,7 @@
 
 #pragma mark - Drawing
 
-+ (void)drawRect:(CGRect)bounds withParameters:(LAGradientNodeDrawParameters *)parameters isCancelled:(asdisplaynode_iscancelled_block_t)isCancelledBlock isRasterizing:(BOOL)isRasterizing
-{
++ (void)drawRect:(CGRect)bounds withParameters:(LAGradientNodeDrawParameters *)parameters isCancelled:(asdisplaynode_iscancelled_block_t)isCancelledBlock isRasterizing:(BOOL)isRasterizing {
   CGContextRef myContext = UIGraphicsGetCurrentContext();
   CGContextSaveGState(myContext);
   CGContextClipToRect(myContext, bounds);
@@ -55,8 +54,7 @@
   CGContextRestoreGState(myContext);
 }
 
-- (NSObject *)drawParametersForAsyncLayer:(_ASDisplayLayer *)layer
-{
+- (NSObject *)drawParametersForAsyncLayer:(_ASDisplayLayer *)layer {
   return [[LAGradientNodeDrawParameters alloc] init];
 }
 

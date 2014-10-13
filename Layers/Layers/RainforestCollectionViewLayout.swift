@@ -176,12 +176,13 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     return allLayoutAttributes[indexPath.item]
   }
   
-  override func shouldInvalidateLayoutForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
+  override func shouldInvalidateLayoutForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes,
+      withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
     return true
   }
   
-  override func invalidationContextForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
-    
+  override func invalidationContextForPreferredLayoutAttributes(preferredAttributes: UICollectionViewLayoutAttributes,
+      withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutInvalidationContext {
     let indexForItemAbove = layoutMetrics.indexForItemAboveItemAtIndex(originalAttributes.indexPath.item)
     let layoutAttributesForItemAbove = allLayoutAttributes[indexForItemAbove]
     

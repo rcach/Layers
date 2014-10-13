@@ -10,7 +10,6 @@ struct RainforestCardInfo {
   let name: String
   let description: String
   let imageName: String
-  
   let articleAttribution: String
   let articleOriginLink: String
   let articleLicense: String

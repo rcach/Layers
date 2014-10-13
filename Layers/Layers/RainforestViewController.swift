@@ -17,14 +17,16 @@ class RainforestViewController: UICollectionViewController, UICollectionViewData
     super.viewDidLoad()
   }
   
-  override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  override func collectionView(collectionView: UICollectionView,
+      numberOfItemsInSection section: Int) -> Int {
     return rainforestCardsInfo.count
   }
   
-  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+  override func collectionView(collectionView: UICollectionView,
+      cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     var cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as RainforestCardCell
     let cardInfo = rainforestCardsInfo[indexPath.item]
-    cell.configureCellForDisplay(cardInfo: cardInfo, nodeConstructionQueue: nodeConstructionQueue)
+    cell.configureCellDisplayWithCardInfo(cardInfo, nodeConstructionQueue: nodeConstructionQueue)
     return cell
   }
 }

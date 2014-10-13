@@ -16,11 +16,13 @@ class FrameCalculator {
   }
 
   class func frameForDescriptionText(#containerBounds: CGRect, featureImageFrame: CGRect) -> CGRect {
-    return CGRectMake(24.0, featureImageFrame.maxY + 20.0, containerBounds.width - 48.0, textAreaHeight)
+    return CGRect(x: 24.0, y: featureImageFrame.maxY + 20.0, width: containerBounds.width - 48.0, height: textAreaHeight)
   }
   
   class func frameForTitleText(#containerBounds: CGRect, featureImageFrame: CGRect) -> CGRect {
-    return CGRectInset(CGRectMake(0, featureImageFrame.maxY - 70.0, containerBounds.width, 70), 20, 20)
+    var frameForTitleText = CGRect(x: 0, y: featureImageFrame.maxY - 70.0, width: containerBounds.width, height: 70)
+    frameForTitleText.inset(dx: 20, dy: 20)
+    return frameForTitleText
   }
   
   class func frameForGradient(#featureImageFrame: CGRect) -> CGRect {

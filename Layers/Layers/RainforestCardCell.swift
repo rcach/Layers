@@ -10,15 +10,9 @@ import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
   var nodeConstructionOperation: NSOperation?
-  
   var featureImageSizeOptional: CGSize?
-  
-  var containerNode: ASDisplayNode?
-  var backgroundBlurNode: ASImageNode?
-  
-  var contentLayer: CALayer?
-  var placeholderLayer: CALayer!
-
+  var containerNode: ASDisplayNode?, backgroundBlurNode: ASImageNode?
+  var contentLayer: CALayer?, placeholderLayer: CALayer!
   
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -65,7 +59,8 @@ class RainforestCardCell: UICollectionViewCell {
     containerNode = nil
   }
   
-  func configureCellForDisplay(#cardInfo: RainforestCardInfo, nodeConstructionQueue: NSOperationQueue) {
+  func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo,
+      nodeConstructionQueue: NSOperationQueue) {
     if let oldNodeConstructionOperation = nodeConstructionOperation {
       oldNodeConstructionOperation.cancel()
     }
@@ -79,11 +74,11 @@ class RainforestCardCell: UICollectionViewCell {
   }
   
   //MARK: Nodes
-  func nodeConstructionOperationWithCardInfo(cardInfo: RainforestCardInfo, image: UIImage) -> NSOperation {
+  func nodeConstructionOperationWithCardInfo(cardInfo: RainforestCardInfo,
+      image: UIImage) -> NSOperation {
     let nodeConstructionOperation = NSBlockOperation()
     nodeConstructionOperation.addExecutionBlock {
       [unowned nodeConstructionOperation, weak self] in
-      
       
       // 0: Preflight check
       if nodeConstructionOperation.cancelled {
@@ -118,7 +113,9 @@ class RainforestCardCell: UICollectionViewCell {
           return backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
         }
         
-        if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor, saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
+        if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor,
+                                                        saturationDeltaFactor: 1.8, maskImage: nil,
+                                                        didCancel:didCancelBlur) {
           return blurredImage
         } else {
           return image
@@ -154,10 +151,13 @@ class RainforestCardCell: UICollectionViewCell {
       // 3: Layout nodes
       containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
       backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
-      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size, containerFrameWidth: containerNode.frame.size.width)
+      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
+                                                                    containerFrameWidth: containerNode.frame.size.width)
       gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
-      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
-      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
+      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
+                                                              featureImageFrame: featureImageNode.frame)
+      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
+                                                                          featureImageFrame: featureImageNode.frame)
       
       
       // 4: Fast return if operation cancelled
