@@ -14,7 +14,6 @@ protocol RainforestLayoutMetrics {
   func rowForItemAtIndex(index: Int) -> Int
   func columnForItemAtIndex(index: Int) -> Int
   func indexForItemAboveItemAtIndex(index: Int) -> Int
-  func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int
   func numberOfColumns() -> Int
 }
 
@@ -22,11 +21,9 @@ class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
   func numberOfRowsForNumberOfItems(numberOfItems: Int) -> Int {
     var isOdd: Bool = numberOfItems%2 > 0
     var numberOfRows = numberOfItems/2
-    
     if isOdd {
       numberOfRows++
     }
-    
     return numberOfRows
   }
   
@@ -41,11 +38,6 @@ class TwoColumnLayoutMetrics: RainforestLayoutMetrics {
   func indexForItemAboveItemAtIndex(index: Int) -> Int {
     var aboveItemIndex = index - 2
     return aboveItemIndex >= 0 ? aboveItemIndex : index
-  }
-  
-  // TODO: Fix this, it should take the cv's frame width into consideration.
-  func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int {
-    return cellWidth + horizontalSpacing + cellWidth
   }
   
   func numberOfColumns() -> Int {
@@ -69,10 +61,6 @@ class OneColumnLayoutMetrics: RainforestLayoutMetrics {
   func indexForItemAboveItemAtIndex(index: Int) -> Int {
     var aboveItemIndex = index - 1
     return aboveItemIndex >= 0 ? aboveItemIndex : index
-  }
-  
-  func contentWidth(cellWidth: Int, horizontalSpacing: Int) -> Int {
-    return horizontalSpacing + cellWidth + horizontalSpacing
   }
   
   func numberOfColumns() -> Int {
@@ -126,13 +114,11 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     super.prepareLayout()
     if allLayoutAttributes.count == 0 {
       if let collectionView = self.collectionView {
-        //TODO: Fix this.
         if collectionView.frame.size.width < CGFloat((self.cellWidth * 2.0) + interCellHorizontalSpacing) {
           layoutType = .OneColumn
           layoutMetrics = layoutType.metrics()
         }
       }
-      
       populateLayoutAttributes()
     }
   }
@@ -171,9 +157,7 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
       return CGSizeZero
     }
     let collectionView = self.collectionView!
-    
-    let contentWidth = layoutMetrics.contentWidth(cellWidth, horizontalSpacing: interCellHorizontalSpacing)
-    return CGSize(width: contentWidth, height: Int(contentMaxY))
+    return CGSize(width: collectionView.frame.size.width, height: contentMaxY)
   }
   
   override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
