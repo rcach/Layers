@@ -19,7 +19,7 @@
 		206134AC19B53F8000888CAB /* RainforestCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206134AB19B53F8000888CAB /* RainforestCardCell.swift */; };
 		206EF71B19E9E059008EA306 /* Factories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206EF71A19E9E059008EA306 /* Factories.swift */; };
 		20A29BFC19B55FA3007FF4F2 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */; };
-		20CE71D919ECB94100001B0D /* LAGradientNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CE71D819ECB94100001B0D /* LAGradientNode.m */; };
+		20CE71D919ECB94100001B0D /* LAGradientNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20CE71D819ECB94100001B0D /* LAGradientNode.mm */; };
 		20CE71DC19ECC29300001B0D /* LAAnimatedDisplayLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20CE71DB19ECC29300001B0D /* LAAnimatedDisplayLayer.mm */; };
 		20D857E019E7744C00C74F2D /* AttributionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -41,7 +41,7 @@
 		20A29BFA19B55FA3007FF4F2 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		20A29BFB19B55FA3007FF4F2 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		20CE71D719ECB94100001B0D /* LAGradientNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAGradientNode.h; sourceTree = "<group>"; };
-		20CE71D819ECB94100001B0D /* LAGradientNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAGradientNode.m; sourceTree = "<group>"; };
+		20CE71D819ECB94100001B0D /* LAGradientNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LAGradientNode.mm; sourceTree = "<group>"; };
 		20CE71DA19ECC29300001B0D /* LAAnimatedDisplayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAAnimatedDisplayLayer.h; sourceTree = "<group>"; };
 		20CE71DB19ECC29300001B0D /* LAAnimatedDisplayLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LAAnimatedDisplayLayer.mm; sourceTree = "<group>"; };
 		20D857DF19E7744C00C74F2D /* AttributionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributionTableViewController.swift; sourceTree = "<group>"; };
@@ -87,7 +87,7 @@
 				206134AB19B53F8000888CAB /* RainforestCardCell.swift */,
 				20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */,
 				20CE71D719ECB94100001B0D /* LAGradientNode.h */,
-				20CE71D819ECB94100001B0D /* LAGradientNode.m */,
+				20CE71D819ECB94100001B0D /* LAGradientNode.mm */,
 				20CE71DA19ECC29300001B0D /* LAAnimatedDisplayLayer.h */,
 				20CE71DB19ECC29300001B0D /* LAAnimatedDisplayLayer.mm */,
 				2094AC3119E4CE1F00AF33ED /* Other Files */,
@@ -272,7 +272,7 @@
 				2061349119B53BE200888CAB /* RainforestViewController.swift in Sources */,
 				20101BE919CF4E9300E363A8 /* FrameCalculator.swift in Sources */,
 				206EF71B19E9E059008EA306 /* Factories.swift in Sources */,
-				20CE71D919ECB94100001B0D /* LAGradientNode.m in Sources */,
+				20CE71D919ECB94100001B0D /* LAGradientNode.mm in Sources */,
 				202BB8C719E77A25009CD152 /* AttributionTableViewCell.swift in Sources */,
 				20CE71DC19ECC29300001B0D /* LAAnimatedDisplayLayer.mm in Sources */,
 				20101BE219CF2E7900E363A8 /* RainforestCardInfo.swift in Sources */,
