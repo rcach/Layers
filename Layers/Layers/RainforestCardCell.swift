@@ -9,20 +9,13 @@
 import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
-  let featureImageView = UIImageView()
-  let backgroundImageView = UIImageView()
-  let titleLabel = UILabel()
-  let descriptionTextView = UITextView()
-  let gradientView = LAGradientView()
   var featureImageSizeOptional: CGSize?
+  var backgroundBlurNode: ASImageNode?
+  var contentLayer: CALayer?
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    contentView.addSubview(backgroundImageView)
-    contentView.addSubview(featureImageView)
-    contentView.addSubview(gradientView)
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(descriptionTextView)
+    
     contentView.layer.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
     contentView.layer.borderWidth = 1
   }
@@ -38,22 +31,16 @@ class RainforestCardCell: UICollectionViewCell {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    
-    let featureImageSize = featureImageSizeOptional ?? CGSizeZero
-    
-    backgroundImageView.frame = FrameCalculator.frameForBackgroundImage(containerBounds: bounds)
-    featureImageView.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageSize,
-      containerFrameWidth: frame.size.width)
-    gradientView.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageView.frame)
-    titleLabel.frame = FrameCalculator.frameForTitleText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
-    descriptionTextView.frame = FrameCalculator.frameForDescriptionText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
   }
   
   //MARK: Cell Reuse
   override func prepareForReuse() {
     super.prepareForReuse()
+    
+    backgroundBlurNode?.preventOrCancelDisplay = true
+    contentLayer?.removeFromSuperlayer()
+    contentLayer = nil
+    backgroundBlurNode = nil
   }
   
   //MARK: Subviews
@@ -61,22 +48,50 @@ class RainforestCardCell: UICollectionViewCell {
     let image = UIImage(named: cardInfo.imageName)
     featureImageSizeOptional = image.size
     
-    featureImageView.contentMode = .ScaleAspectFit
-    featureImageView.image = image
+    // Build all subnodes
+    let backgroundImageNode = ASImageNode()
+    backgroundImageNode.layerBacked = true
+      backgroundImageNode.contentMode = .ScaleAspectFill
+      backgroundImageNode.image = image
+      backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] (input: UIImage!) -> UIImage in
+        if input == nil {
+          return input
+        }
+        
+        let tintColor = UIColor(white: 0.5, alpha: 0.3)
+        let didCancelBlur: () -> Bool = {
+          var isCancelled = false
+          let isCancelledClosure = {
+            isCancelled = backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
+          }
+          if NSThread.isMainThread() {
+            isCancelledClosure()
+          } else {
+            dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
+          }
+          return isCancelled
+        }
+        
+        if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor,
+                                                        saturationDeltaFactor: 1.8, maskImage: nil,
+                                                        didCancel:didCancelBlur) {
+          return blurredImage
+        } else {
+          return image
+        }
+      }
     
-    backgroundImageView.contentMode = .ScaleAspectFill
-    backgroundImageView.image = image.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
-      saturationDeltaFactor: 1.8, maskImage: nil)
+    // Layout nodes
+    backgroundImageNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
     
-    descriptionTextView.backgroundColor = UIColor.clearColor()
-    descriptionTextView.editable = false
-    descriptionTextView.scrollEnabled = false
-    descriptionTextView.attributedText = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
+    // Add node layer to content view and finish up configuring cell
+    contentView.layer.addSublayer(backgroundImageNode.layer)
+    backgroundBlurNode = backgroundImageNode
+    contentLayer = backgroundImageNode.layer
     
-    titleLabel.backgroundColor = UIColor.clearColor()
-    titleLabel.attributedText = NSAttributedString.attributesStringForTitleText(cardInfo.name)
+    // Tell the node to display, this will occure asynchronously potentially across many main thread run loops
+    backgroundImageNode.setNeedsDisplay()
     
-    gradientView.setNeedsDisplay()
   }
   
 }
