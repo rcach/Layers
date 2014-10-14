@@ -10,7 +10,7 @@ import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
   var featureImageSizeOptional: CGSize?
-  var backgroundBlurNode: ASImageNode?
+  var containerNode: ASDisplayNode?, backgroundBlurNode: ASImageNode?
   var contentLayer: CALayer?
   
   override func awakeFromNib() {
@@ -37,9 +37,12 @@ class RainforestCardCell: UICollectionViewCell {
   override func prepareForReuse() {
     super.prepareForReuse()
     
+    containerNode?.recursiveSetPreventOrCancelDisplay(true)
+    //FIXME: Remove backgroundBlurNode stored property once AsyncDisplayKit pull request #41 is merged.
     backgroundBlurNode?.preventOrCancelDisplay = true
     contentLayer?.removeFromSuperlayer()
     contentLayer = nil
+    containerNode = nil
     backgroundBlurNode = nil
   }
   
@@ -78,16 +81,26 @@ class RainforestCardCell: UICollectionViewCell {
       }
     }
     
+    // Build container node and construct node hierarchy
+    let containerNode = ASDisplayNode()
+    containerNode.layerBacked = true
+    containerNode.shouldRasterizeDescendants = true
+    containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
+    containerNode.borderWidth = 1
+    containerNode.addSubnode(backgroundImageNode)
+    
     // Layout nodes
-    backgroundImageNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
+    containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
+    backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
     
     // Add node layer to content view and finish up configuring cell
-    contentView.layer.addSublayer(backgroundImageNode.layer)
+    contentView.layer.addSublayer(containerNode.layer)
+    self.containerNode = containerNode
     backgroundBlurNode = backgroundImageNode
-    contentLayer = backgroundImageNode.layer
+    contentLayer = containerNode.layer
     
     // Tell the node to display, this will occure asynchronously potentially across many main thread run loops
-    backgroundImageNode.setNeedsDisplay()
+    containerNode.setNeedsDisplay()
     
   }
   
