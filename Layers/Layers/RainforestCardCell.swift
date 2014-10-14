@@ -48,38 +48,35 @@ class RainforestCardCell: UICollectionViewCell {
     let image = UIImage(named: cardInfo.imageName)
     featureImageSizeOptional = image.size
     
-    // Build all subnodes
+    // Build background blur node
     let backgroundImageNode = ASImageNode()
     backgroundImageNode.layerBacked = true
-      backgroundImageNode.contentMode = .ScaleAspectFill
-      backgroundImageNode.image = image
-      backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] (input: UIImage!) -> UIImage in
-        if input == nil {
-          return input
-        }
-        
-        let tintColor = UIColor(white: 0.5, alpha: 0.3)
-        let didCancelBlur: () -> Bool = {
-          var isCancelled = false
-          let isCancelledClosure = {
-            isCancelled = backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
-          }
-          if NSThread.isMainThread() {
-            isCancelledClosure()
-          } else {
-            dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
-          }
-          return isCancelled
-        }
-        
-        if let blurredImage = input.applyBlurWithRadius(30, tintColor: tintColor,
-                                                        saturationDeltaFactor: 1.8, maskImage: nil,
-                                                        didCancel:didCancelBlur) {
-          return blurredImage
-        } else {
-          return image
-        }
+    backgroundImageNode.contentMode = .ScaleAspectFill
+    backgroundImageNode.image = image
+    backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] (input: UIImage!) -> UIImage in
+      if input == nil {
+        return input
       }
+      let didCancelBlur: () -> Bool = {
+        var isCancelled = false
+        let isCancelledClosure = {
+          isCancelled = backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
+        }
+        if NSThread.isMainThread() {
+          isCancelledClosure()
+        } else {
+          dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
+        }
+        return isCancelled
+      }
+      if let blurredImage = input.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
+                                                      saturationDeltaFactor: 1.8, maskImage: nil,
+                                                      didCancel:didCancelBlur) {
+        return blurredImage
+      } else {
+        return image
+      }
+    }
     
     // Layout nodes
     backgroundImageNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
