@@ -1,13 +1,13 @@
 //
-//  LAGradientView.h
+//  LAGradientNode.h
 //  Layers
 //
 //  Created by René Cacheaux on 10/13/14.
 //  Copyright (c) 2014 Razeware LLC. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "ASDisplayNode.h"
 
-@interface LAGradientView : UIView
+@interface LAGradientNode : ASDisplayNode
 
 @end

@@ -4,4 +4,4 @@
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 #import "UIImage+ImageEffects.h"
-#import "LAGradientView.h"
+#import "LAGradientNode.h"

@@ -96,6 +96,9 @@ class RainforestCardCell: UICollectionViewCell {
     titleTextNode.backgroundColor = UIColor.clearColor()
     titleTextNode.attributedString = NSAttributedString.attributesStringForTitleText(cardInfo.name)
     
+    let gradientNode = LAGradientNode()
+    gradientNode.layerBacked = true
+    
     // Build container node and construct node hierarchy
     let containerNode = ASDisplayNode()
     containerNode.layerBacked = true
@@ -106,6 +109,7 @@ class RainforestCardCell: UICollectionViewCell {
     // Build hierarchy
     containerNode.addSubnode(backgroundImageNode)
     containerNode.addSubnode(featureImageNode)
+    containerNode.addSubnode(gradientNode)
     containerNode.addSubnode(titleTextNode)
     containerNode.addSubnode(descriptionTextNode)
     
@@ -118,6 +122,7 @@ class RainforestCardCell: UICollectionViewCell {
                                                             featureImageFrame: featureImageNode.frame)
     descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
                                                                         featureImageFrame: featureImageNode.frame)
+    gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
     
     // Add node layer to content view and finish up configuring cell
     contentView.layer.addSublayer(containerNode.layer)
