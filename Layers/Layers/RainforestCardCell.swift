@@ -81,17 +81,43 @@ class RainforestCardCell: UICollectionViewCell {
       }
     }
     
+    let featureImageNode = ASImageNode()
+    featureImageNode.layerBacked = true
+    featureImageNode.contentMode = .ScaleAspectFit
+    featureImageNode.image = image
+    
+    let descriptionTextNode = ASTextNode()
+    descriptionTextNode.layerBacked = true
+    descriptionTextNode.backgroundColor = UIColor.clearColor()
+    descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
+    
+    let titleTextNode = ASTextNode()
+    titleTextNode.layerBacked = true
+    titleTextNode.backgroundColor = UIColor.clearColor()
+    titleTextNode.attributedString = NSAttributedString.attributesStringForTitleText(cardInfo.name)
+    
     // Build container node and construct node hierarchy
     let containerNode = ASDisplayNode()
     containerNode.layerBacked = true
     containerNode.shouldRasterizeDescendants = true
     containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
     containerNode.borderWidth = 1
+    
+    // Build hierarchy
     containerNode.addSubnode(backgroundImageNode)
+    containerNode.addSubnode(featureImageNode)
+    containerNode.addSubnode(titleTextNode)
+    containerNode.addSubnode(descriptionTextNode)
     
     // Layout nodes
     containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
     backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
+    featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
+                                                                  containerFrameWidth: containerNode.frame.size.width)
+    titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
+                                                            featureImageFrame: featureImageNode.frame)
+    descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
+                                                                        featureImageFrame: featureImageNode.frame)
     
     // Add node layer to content view and finish up configuring cell
     contentView.layer.addSublayer(containerNode.layer)
