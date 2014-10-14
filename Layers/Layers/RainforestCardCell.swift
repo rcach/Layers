@@ -140,7 +140,7 @@ class RainforestCardCell: UICollectionViewCell {
       gradientNode.layerBacked = true
       
       // Build container node and construct node hierarchy
-      let containerNode = ASDisplayNode()
+      let containerNode = ASDisplayNode(layerClass: LAAnimatedDisplayLayer.self)
       containerNode.layerBacked = true
       containerNode.shouldRasterizeDescendants = true
       containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
