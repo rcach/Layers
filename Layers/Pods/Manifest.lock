@@ -4,11 +4,11 @@ PODS:
   - AsyncDisplayKit/ASDealloc2MainObject (1.0-beta2)
 
 DEPENDENCIES:
-  - AsyncDisplayKit (from `git@github.com:facebook/AsyncDisplayKit.git`)
+  - AsyncDisplayKit (from `https://github.com/facebook/AsyncDisplayKit.git`)
 
 EXTERNAL SOURCES:
   AsyncDisplayKit:
-    :git: git@github.com:facebook/AsyncDisplayKit.git
+    :git: https://github.com/facebook/AsyncDisplayKit.git
 
 SPEC CHECKSUMS:
   AsyncDisplayKit: a89ae012f18f22e12fcc030ca53297e2835971e3
