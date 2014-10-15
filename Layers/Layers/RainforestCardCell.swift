@@ -16,7 +16,7 @@ class RainforestCardCell: UICollectionViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     placeholderLayer = CALayer()
-    placeholderLayer.contents = UIImage(named: "placeholder").CGImage
+    placeholderLayer.contents = UIImage(named: "cardPlaceholder").CGImage
     placeholderLayer.contentsGravity = kCAGravityCenter
     placeholderLayer.contentsScale = UIScreen.mainScreen().scale
     placeholderLayer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
