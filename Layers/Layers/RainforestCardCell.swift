@@ -96,7 +96,7 @@ class RainforestCardCell: UICollectionViewCell {
     titleTextNode.backgroundColor = UIColor.clearColor()
     titleTextNode.attributedString = NSAttributedString.attributesStringForTitleText(cardInfo.name)
     
-    let gradientNode = LAGradientNode()
+    let gradientNode = GradientNode()
     gradientNode.layerBacked = true
     
     // Build container node and construct node hierarchy
