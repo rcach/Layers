@@ -13,7 +13,7 @@ class RainforestCardCell: UICollectionViewCell {
   let backgroundImageView = UIImageView()
   let titleLabel = UILabel()
   let descriptionTextView = UITextView()
-  let gradientView = LAGradientView()
+  let gradientView = GradientView()
   var featureImageSizeOptional: CGSize?
   
   override func awakeFromNib() {

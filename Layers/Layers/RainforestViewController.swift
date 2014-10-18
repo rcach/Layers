@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class RainforestViewController: UICollectionViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
   let rainforestCardsInfo = getAllCardInfo()
                             

@@ -3,4 +3,3 @@
 //
 
 #import "UIImage+ImageEffects.h"
-#import "LAGradientView.h"
