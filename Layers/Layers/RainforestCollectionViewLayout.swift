@@ -9,6 +9,10 @@
 import Foundation
 
 
+// NOTE: This custom layout is built specifically for the AsyncDisplayKit tutorial. If you would like
+//  to use this layout outside this project you may end up needing to make modifications. 
+//  However, this code is a good starting point.
+
 protocol RainforestLayoutMetrics {
   func numberOfRowsForNumberOfItems(numberOfItems: Int) -> Int
   func rowForItemAtIndex(index: Int) -> Int
