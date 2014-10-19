@@ -8,15 +8,13 @@
 
 // AsyncDisplayKit
 #define COCOAPODS_POD_AVAILABLE_AsyncDisplayKit
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 1.0-beta2.
+#define COCOAPODS_VERSION_MAJOR_AsyncDisplayKit 1
+#define COCOAPODS_VERSION_MINOR_AsyncDisplayKit 0
+#define COCOAPODS_VERSION_PATCH_AsyncDisplayKit 0
 
 // AsyncDisplayKit/ASDealloc2MainObject
 #define COCOAPODS_POD_AVAILABLE_AsyncDisplayKit_ASDealloc2MainObject
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 1.0-beta2.
+#define COCOAPODS_VERSION_MAJOR_AsyncDisplayKit_ASDealloc2MainObject 1
+#define COCOAPODS_VERSION_MINOR_AsyncDisplayKit_ASDealloc2MainObject 0
+#define COCOAPODS_VERSION_PATCH_AsyncDisplayKit_ASDealloc2MainObject 0
 

@@ -1,5 +1,10 @@
 ![AsyncDisplayKit](https://github.com/facebook/AsyncDisplayKit/blob/master/docs/assets/logo.png)
 
+[![Build Status](https://travis-ci.org/facebook/AsyncDisplayKit.svg)](https://travis-ci.org/facebook/AsyncDisplayKit)
+ [![Version](http://img.shields.io/cocoapods/v/AsyncDisplayKit.svg)](http://cocoapods.org/?q=AsyncDisplayKit)
+ [![Platform](http://img.shields.io/cocoapods/p/AsyncDisplayKit.svg)]()
+ [![License](http://img.shields.io/cocoapods/l/AsyncDisplayKit.svg)](https://github.com/facebook/AsyncDisplayKit/blob/master/LICENSE)
+
 AsyncDisplayKit is an iOS framework that keeps even the most complex user
 interfaces smooth and responsive.  It was originally built to make Facebook's
 [Paper](https://facebook.com/paper) possible, and goes hand-in-hand with
@@ -11,7 +16,7 @@ it's just as powerful with UIKit Dynamics and conventional app designs.
 ASDK is available on [CocoaPods](http://cocoapods.org).  Add the following to your Podfile:
 
 ```ruby
-pod 'AsyncDisplayKit', :git => 'git@github.com:facebook/AsyncDisplayKit.git'
+pod 'AsyncDisplayKit'
 ```
 
 Import the framework header, or create an [Objective-C bridging
@@ -55,10 +60,10 @@ blocking the main thread.
 
 ### Learn more
 
-* Read the [Getting Started guide](http://facebook.github.io/AsyncDisplayKit/guide/)
+* Read the [Getting Started guide](http://asyncdisplaykit.org/guide/)
 * Get the [sample projects](https://github.com/facebook/AsyncDisplayKit/tree/master/examples)
-* Browse the [API reference](http://facebook.github.io/AsyncDisplayKit/appledoc/)
-* Watch the [NSLondon talk](http://www.youtube.com/watch?v=h4QDbgB7RLo)
+* Browse the [API reference](http://asyncdisplaykit.org/appledoc/)
+* Watch the [NSLondon talk](http://vimeo.com/103589245)
 
 ## Testing
 

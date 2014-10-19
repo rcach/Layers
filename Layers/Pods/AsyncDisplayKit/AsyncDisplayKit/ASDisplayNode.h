@@ -127,7 +127,7 @@
 /** 
  * @abstract Asks the node to calculate and return the size that best fits its subnodes.
  *
- * @param size The current size of the receiver.
+ * @param constrainedSize The maximum size the receiver should fit in.
  *
  * @return A new size that fits the receiver's subviews.
  *
@@ -137,7 +137,7 @@
  * @warning Subclasses must not override this; it caches results from -calculateSizeThatFits:.  Calling this method may 
  * be expensive if result is not cached.
  *
- * @see calculateSizeThatFits:
+ * @see [ASDisplayNode(Subclassing) calculateSizeThatFits:]
  */
 - (CGSize)measure:(CGSize)constrainedSize;
 
@@ -310,17 +310,30 @@
  *
  * If a setNeedsDisplay occurs while preventOrCancelDisplay is YES, and preventOrCancelDisplay is set to NO, then the 
  * layer will be automatically displayed.
- *
- * @see displayWasCancelled
  */
 @property (nonatomic, assign) BOOL preventOrCancelDisplay;
 
 /** 
  * @abstract Prevent the node and its descendants' layer from displaying.
  *
+ * @param flag YES if display should be prevented or cancelled; NO otherwise.
+ *
  * @see preventOrCancelDisplay
  */
 - (void)recursiveSetPreventOrCancelDisplay:(BOOL)flag;
+
+/**
+ * @abstract Calls -reclaimMemory on the receiver and its subnode hierarchy.
+ *
+ * @discussion Clears backing stores and other memory-intensive intermediates.
+ * If the node is removed from a visible hierarchy and then re-added, it will automatically trigger a new asynchronous display,
+ * as long as preventOrCancelDisplay is not set.
+ * If the node remains in the hierarchy throughout, -setNeedsDisplay is required to trigger a new asynchronous display.
+ *
+ * @see preventOrCancelDisplay and setNeedsDisplay
+ */
+
+- (void)recursivelyReclaimMemory;
 
 
 /** @name Hit Testing */
@@ -398,10 +411,14 @@
 @end
 
 
+/**
+ * Convenience methods for debugging.
+ */
+
 @interface ASDisplayNode (Debugging)
 
 /**
- * @abstract Return a description of the node hierarchy
+ * @abstract Return a description of the node hierarchy.
  *
  * @discussion For debugging: (lldb) po [node displayNodeRecursiveDescription]
  */
@@ -420,7 +437,7 @@
  *
  * After the view is created, the properties pass through to the view directly as if called on the main thread.
  *
- * @see UIView and CALayer for documentation on these common properties.
+ * See UIView and CALayer for documentation on these common properties.
  */
 @interface ASDisplayNode (UIViewBridge)
 
