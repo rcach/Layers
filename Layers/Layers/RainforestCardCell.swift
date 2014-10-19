@@ -44,11 +44,11 @@ class RainforestCardCell: UICollectionViewCell {
     backgroundImageView.frame = FrameCalculator.frameForBackgroundImage(containerBounds: bounds)
     featureImageView.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageSize,
       containerFrameWidth: frame.size.width)
-    gradientView.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageView.frame)
     titleLabel.frame = FrameCalculator.frameForTitleText(containerBounds: bounds,
       featureImageFrame: featureImageView.frame)
     descriptionTextView.frame = FrameCalculator.frameForDescriptionText(containerBounds: bounds,
       featureImageFrame: featureImageView.frame)
+    gradientView.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageView.frame)
   }
   
   //MARK: Cell Reuse
@@ -56,25 +56,25 @@ class RainforestCardCell: UICollectionViewCell {
     super.prepareForReuse()
   }
   
-  //MARK: Subviews
+  //MARK: Cell Content
   func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo) {
     let image = UIImage(named: cardInfo.imageName)
     featureImageSizeOptional = image.size
-    
-    featureImageView.contentMode = .ScaleAspectFit
-    featureImageView.image = image
     
     backgroundImageView.contentMode = .ScaleAspectFill
     backgroundImageView.image = image.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
       saturationDeltaFactor: 1.8, maskImage: nil)
     
+    featureImageView.contentMode = .ScaleAspectFit
+    featureImageView.image = image
+    
+    titleLabel.backgroundColor = UIColor.clearColor()
+    titleLabel.attributedText = NSAttributedString.attributedStringForTitleText(cardInfo.name)
+    
     descriptionTextView.backgroundColor = UIColor.clearColor()
     descriptionTextView.editable = false
     descriptionTextView.scrollEnabled = false
     descriptionTextView.attributedText = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
-    
-    titleLabel.backgroundColor = UIColor.clearColor()
-    titleLabel.attributedText = NSAttributedString.attributesStringForTitleText(cardInfo.name)
     
     gradientView.setNeedsDisplay()
   }

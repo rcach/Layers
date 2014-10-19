@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RainforestViewController: UICollectionViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class RainforestViewController: UICollectionViewController {
   let rainforestCardsInfo = getAllCardInfo()
                             
   override func viewDidLoad() {

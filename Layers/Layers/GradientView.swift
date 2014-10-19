@@ -34,11 +34,13 @@ class GradientView: UIView {
     let components: [CGFloat] = [0.0, 0.0, 0.0, 1.0,
                                  0.0, 0.0, 0.0, 0.0]
     let myColorSpace = CGColorSpaceCreateDeviceRGB()
-    let myGradient = CGGradientCreateWithColorComponents(myColorSpace, components, locations, componentCount)
+    let myGradient = CGGradientCreateWithColorComponents(myColorSpace, components,
+      locations, componentCount)
     
     let myStartPoint = CGPoint(x: bounds.midX, y: bounds.maxY)
     let myEndPoint = CGPoint(x: bounds.midX, y: bounds.midY)
-    CGContextDrawLinearGradient(myContext, myGradient, myStartPoint, myEndPoint, UInt32(kCGGradientDrawsAfterEndLocation))
+    CGContextDrawLinearGradient(myContext, myGradient, myStartPoint,
+      myEndPoint, UInt32(kCGGradientDrawsAfterEndLocation))
     
     CGContextRestoreGState(myContext)
   }
