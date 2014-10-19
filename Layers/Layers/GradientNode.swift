@@ -1,30 +1,17 @@
 //
-//  GradientView.swift
+//  GradientNode.swift
 //  Layers
 //
-//  Created by René Cacheaux on 10/18/14.
+//  Created by René Cacheaux on 10/19/14.
 //  Copyright (c) 2014 Razeware LLC. All rights reserved.
 //
 
 import UIKit
 
-class GradientView: UIView {
-
-  required init(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    backgroundColor = UIColor.clearColor()
-  }
+class GradientNode: ASDisplayNode {
   
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    backgroundColor = UIColor.clearColor()
-  }
-  
-  override convenience init() {
-    self.init(frame: CGRectZero)
-  }
-  
-  override func drawRect(rect: CGRect) {
+  class func drawRect(bounds: CGRect, withParameters parameters: NSObjectProtocol!,
+      isCancelled isCancelledBlock: asdisplaynode_iscancelled_block_t!, isRasterizing: Bool) {
     let myContext = UIGraphicsGetCurrentContext()
     CGContextSaveGState(myContext)
     CGContextClipToRect(myContext, bounds)
@@ -32,7 +19,7 @@ class GradientView: UIView {
     let componentCount: UInt = 2
     let locations: [CGFloat] = [0.0, 1.0]
     let components: [CGFloat] = [0.0, 0.0, 0.0, 1.0,
-                                 0.0, 0.0, 0.0, 0.0]
+      0.0, 0.0, 0.0, 0.0]
     let myColorSpace = CGColorSpaceCreateDeviceRGB()
     let myGradient = CGGradientCreateWithColorComponents(myColorSpace, components,
       locations, componentCount)

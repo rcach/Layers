@@ -10,6 +10,7 @@ import UIKit
 
 class RainforestViewController: UICollectionViewController {
   let rainforestCardsInfo = getAllCardInfo()
+  let nodeConstructionQueue = NSOperationQueue()
                             
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -24,7 +25,7 @@ class RainforestViewController: UICollectionViewController {
       cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
     var cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as RainforestCardCell
     let cardInfo = rainforestCardsInfo[indexPath.item]
-    cell.configureCellDisplayWithCardInfo(cardInfo)
+    cell.configureCellDisplayWithCardInfo(cardInfo, nodeConstructionQueue: nodeConstructionQueue)
     return cell
   }
 }
