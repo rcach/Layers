@@ -9,20 +9,21 @@
 import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
-  let featureImageView = UIImageView()
-  let backgroundImageView = UIImageView()
-  let titleLabel = UILabel()
-  let descriptionTextView = UITextView()
-  let gradientView = GradientView()
   var featureImageSizeOptional: CGSize?
+  var placeholderLayer: CALayer!
+  var contentLayer: CALayer?
+  var containerNode: ASDisplayNode?
+  var nodeConstructionOperation: NSOperation?
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    contentView.addSubview(backgroundImageView)
-    contentView.addSubview(featureImageView)
-    contentView.addSubview(gradientView)
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(descriptionTextView)
+    placeholderLayer = CALayer()
+    placeholderLayer.contents = UIImage(named: "cardPlaceholder").CGImage
+    placeholderLayer.contentsGravity = kCAGravityCenter
+    placeholderLayer.contentsScale = UIScreen.mainScreen().scale
+    placeholderLayer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
+    contentView.layer.addSublayer(placeholderLayer)
+    
     contentView.layer.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
     contentView.layer.borderWidth = 1
   }
@@ -38,45 +39,140 @@ class RainforestCardCell: UICollectionViewCell {
   
   override func layoutSubviews() {
     super.layoutSubviews()
-    
-    let featureImageSize = featureImageSizeOptional ?? CGSizeZero
-    
-    backgroundImageView.frame = FrameCalculator.frameForBackgroundImage(containerBounds: bounds)
-    featureImageView.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageSize,
-      containerFrameWidth: frame.size.width)
-    gradientView.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageView.frame)
-    titleLabel.frame = FrameCalculator.frameForTitleText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
-    descriptionTextView.frame = FrameCalculator.frameForDescriptionText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
+    CATransaction.begin()
+    CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+    placeholderLayer?.frame = bounds
+    CATransaction.commit()
   }
   
   //MARK: Cell Reuse
   override func prepareForReuse() {
     super.prepareForReuse()
+    if let operation = nodeConstructionOperation {
+      operation.cancel()
+    }
+    containerNode?.recursiveSetPreventOrCancelDisplay(true)
+    contentLayer?.removeFromSuperlayer()
+    contentLayer = nil
+    containerNode = nil
   }
   
-  //MARK: Subviews
-  func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo) {
+  func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo,
+      nodeConstructionQueue: NSOperationQueue)  {
+    if let oldNodeConstructionOperation = nodeConstructionOperation {
+      oldNodeConstructionOperation.cancel()
+    }
+    
     let image = UIImage(named: cardInfo.imageName)
     featureImageSizeOptional = image.size
-    
-    featureImageView.contentMode = .ScaleAspectFit
-    featureImageView.image = image
-    
-    backgroundImageView.contentMode = .ScaleAspectFill
-    backgroundImageView.image = image.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
-      saturationDeltaFactor: 1.8, maskImage: nil)
-    
-    descriptionTextView.backgroundColor = UIColor.clearColor()
-    descriptionTextView.editable = false
-    descriptionTextView.scrollEnabled = false
-    descriptionTextView.attributedText = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
-    
-    titleLabel.backgroundColor = UIColor.clearColor()
-    titleLabel.attributedText = NSAttributedString.attributesStringForTitleText(cardInfo.name)
-    
-    gradientView.setNeedsDisplay()
+        
+    let newNodeConstructionOperation = nodeConstructionOperationWithCardInfo(cardInfo, image: image)
+    nodeConstructionOperation = newNodeConstructionOperation
+    nodeConstructionQueue.addOperation(newNodeConstructionOperation)
+  }
+  
+  func nodeConstructionOperationWithCardInfo(cardInfo: RainforestCardInfo,
+      image: UIImage) -> NSOperation {
+    let nodeConstructionOperation = NSBlockOperation()
+    nodeConstructionOperation.addExecutionBlock {
+      [weak self, unowned nodeConstructionOperation] in
+      
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      if self == nil {
+        return
+      }
+      
+      let cell = self!
+      
+      let backgroundImageNode = ASImageNode()
+      backgroundImageNode.image = image
+      backgroundImageNode.contentMode = .ScaleAspectFill
+      backgroundImageNode.layerBacked = true
+      backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] input in
+        if input == nil {
+          return input
+        }
+        let didCancelBlur: () -> Bool = {
+          var isCancelled = false
+          let isCancelledClosure = {
+            isCancelled = backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
+          }
+          if NSThread.isMainThread() {
+            isCancelledClosure()
+          } else {
+            dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
+          }
+          return isCancelled
+        }
+        if let blurredImage = input.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
+          saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
+            return blurredImage
+        } else {
+          return image
+        }
+      }
+      
+      let featureImageNode = ASImageNode()
+      featureImageNode.layerBacked = true
+      featureImageNode.contentMode = .ScaleAspectFit
+      featureImageNode.image = image
+      
+      let titleTextNode = ASTextNode()
+      titleTextNode.layerBacked = true
+      titleTextNode.backgroundColor = UIColor.clearColor()
+      titleTextNode.attributedString = NSAttributedString.attributedStringForTitleText(cardInfo.name)
+      
+      let descriptionTextNode = ASTextNode()
+      descriptionTextNode.layerBacked = true
+      descriptionTextNode.backgroundColor = UIColor.clearColor()
+      descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
+      
+      let gradientNode = GradientNode()
+      gradientNode.layerBacked = true
+      
+      let containerNode = ASDisplayNode(layerClass: AnimatedContentsDisplayLayer.self)
+      containerNode.layerBacked = true
+      containerNode.shouldRasterizeDescendants = true
+      containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
+      containerNode.borderWidth = 1
+      
+      containerNode.addSubnode(backgroundImageNode)
+      containerNode.addSubnode(featureImageNode)
+      containerNode.addSubnode(gradientNode)
+      containerNode.addSubnode(titleTextNode)
+      containerNode.addSubnode(descriptionTextNode)
+      
+      containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
+      backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
+      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
+        containerFrameWidth: containerNode.frame.size.width)
+      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
+        featureImageFrame: featureImageNode.frame)
+      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
+        featureImageFrame: featureImageNode.frame)
+      gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
+      
+      if nodeConstructionOperation.cancelled {
+        return
+      }
+      
+      dispatch_async(dispatch_get_main_queue()){ [weak nodeConstructionOperation] in
+        if nodeConstructionOperation == nil || nodeConstructionOperation!.cancelled {
+          return
+        }
+        if cell.nodeConstructionOperation !== nodeConstructionOperation! {
+          return
+        }
+        cell.contentView.layer.addSublayer(containerNode.layer)
+        containerNode.setNeedsDisplay()
+        cell.containerNode = containerNode
+        cell.contentLayer = containerNode.layer
+      }
+
+    }
+    return nodeConstructionOperation
   }
   
 }

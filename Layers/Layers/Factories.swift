@@ -9,7 +9,7 @@
 import Foundation
 
 extension NSAttributedString {
-  class func attributesStringForTitleText(text: String) -> NSAttributedString {
+  class func attributedStringForTitleText(text: String) -> NSAttributedString {
     let titleAttributes =
     [NSFontAttributeName: UIFont(name: "AvenirNext-Heavy", size: 30),
       NSForegroundColorAttributeName: UIColor.whiteColor(),
