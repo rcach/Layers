@@ -81,9 +81,9 @@
 		2061348B19B53BE200888CAB /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				2061349019B53BE200888CAB /* RainforestViewController.swift */,
 				206134AB19B53F8000888CAB /* RainforestCardCell.swift */,
 				20744EE419F3184A00089E92 /* GradientView.swift */,
+				2061349019B53BE200888CAB /* RainforestViewController.swift */,
 				20A29BF919B55FA2007FF4F2 /* Layers-Bridging-Header.h */,
 				2094AC3119E4CE1F00AF33ED /* Other Files */,
 			);
