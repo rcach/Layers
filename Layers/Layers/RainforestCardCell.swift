@@ -58,9 +58,11 @@ class RainforestCardCell: UICollectionViewCell {
   
   //MARK: Cell Content
   func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo) {
+    //MARK: Image Size Section
     let image = UIImage(named: cardInfo.imageName)
     featureImageSizeOptional = image.size
     
+    // Remove everything below this comment:
     backgroundImageView.contentMode = .ScaleAspectFill
     backgroundImageView.image = image.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
       saturationDeltaFactor: 1.8, maskImage: nil)
