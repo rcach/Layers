@@ -20,7 +20,7 @@ class FrameCalculator {
   }
   
   class func frameForTitleText(#containerBounds: CGRect, featureImageFrame: CGRect) -> CGRect {
-    var frameForTitleText = CGRect(x: 0, y: featureImageFrame.maxY - 70.0, width: containerBounds.width, height: 70)
+    var frameForTitleText = CGRect(x: 0, y: featureImageFrame.maxY - 70.0, width: containerBounds.width, height: 80)
     frameForTitleText.inset(dx: 20, dy: 20)
     return frameForTitleText
   }
