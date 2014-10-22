@@ -9,22 +9,19 @@
 import UIKit
 
 class RainforestCardCell: UICollectionViewCell {
-  let featureImageView = UIImageView()
-  let backgroundImageView = UIImageView()
-  let titleLabel = UILabel()
-  let descriptionTextView = UITextView()
-  let gradientView = GradientView()
   var featureImageSizeOptional: CGSize?
+  var placeholderLayer: CALayer!
+  var backgroundImageNode: ASImageNode?
+  var contentLayer: CALayer?
   
   override func awakeFromNib() {
     super.awakeFromNib()
-    contentView.addSubview(backgroundImageView)
-    contentView.addSubview(featureImageView)
-    contentView.addSubview(gradientView)
-    contentView.addSubview(titleLabel)
-    contentView.addSubview(descriptionTextView)
-    contentView.layer.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
-    contentView.layer.borderWidth = 1
+    placeholderLayer = CALayer()
+    placeholderLayer.contents = UIImage(named: "cardPlaceholder")!.CGImage
+    placeholderLayer.contentsGravity = kCAGravityCenter
+    placeholderLayer.contentsScale = UIScreen.mainScreen().scale
+    placeholderLayer.backgroundColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 1).CGColor
+    contentView.layer.addSublayer(placeholderLayer)
   }
 
   //MARK: Layout
@@ -39,21 +36,20 @@ class RainforestCardCell: UICollectionViewCell {
   override func layoutSubviews() {
     super.layoutSubviews()
     
-    let featureImageSize = featureImageSizeOptional ?? CGSizeZero
-    
-    backgroundImageView.frame = FrameCalculator.frameForBackgroundImage(containerBounds: bounds)
-    featureImageView.frame = FrameCalculator.frameForFeatureImage(featureImageSize: featureImageSize,
-      containerFrameWidth: frame.size.width)
-    titleLabel.frame = FrameCalculator.frameForTitleText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
-    descriptionTextView.frame = FrameCalculator.frameForDescriptionText(containerBounds: bounds,
-      featureImageFrame: featureImageView.frame)
-    gradientView.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageView.frame)
+    CATransaction.begin()
+    CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+    placeholderLayer?.frame = bounds
+    CATransaction.commit()
   }
   
   //MARK: Cell Reuse
   override func prepareForReuse() {
     super.prepareForReuse()
+    
+    backgroundImageNode?.preventOrCancelDisplay = true
+    contentLayer?.removeFromSuperlayer()
+    contentLayer = nil
+    backgroundImageNode = nil
   }
   
   //MARK: Cell Content
@@ -62,23 +58,31 @@ class RainforestCardCell: UICollectionViewCell {
     let image = UIImage(named: cardInfo.imageName)!
     featureImageSizeOptional = image.size
     
-    // Remove everything below this comment:
-    backgroundImageView.contentMode = .ScaleAspectFill
-    backgroundImageView.image = image.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
-      saturationDeltaFactor: 1.8, maskImage: nil)
+    //MARK: Node Creation Section
+    let backgroundImageNode = ASImageNode()
+    backgroundImageNode.image = image
+    backgroundImageNode.contentMode = .ScaleAspectFill
+    backgroundImageNode.layerBacked = true
+    backgroundImageNode.imageModificationBlock = { input in
+      if input == nil {
+        return input
+      }
+      if let blurredImage = input.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
+        saturationDeltaFactor: 1.8, maskImage: nil, didCancel:{ return false }) {
+          return blurredImage
+      } else {
+        return image
+      }
+    }
     
-    featureImageView.contentMode = .ScaleAspectFit
-    featureImageView.image = image
+    //MARK: Node Layout Section
+    backgroundImageNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
     
-    titleLabel.backgroundColor = UIColor.clearColor()
-    titleLabel.attributedText = NSAttributedString.attributedStringForTitleText(cardInfo.name)
-    
-    descriptionTextView.backgroundColor = UIColor.clearColor()
-    descriptionTextView.editable = false
-    descriptionTextView.scrollEnabled = false
-    descriptionTextView.attributedText = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
-    
-    gradientView.setNeedsDisplay()
+    //MARK: Node Layer and Wrap Up Section
+    self.contentView.layer.addSublayer(backgroundImageNode.layer)
+    backgroundImageNode.setNeedsDisplay()
+    self.backgroundImageNode = backgroundImageNode
+    self.contentLayer = backgroundImageNode.layer
   }
   
 }

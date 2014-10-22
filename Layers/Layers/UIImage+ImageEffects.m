@@ -109,6 +109,7 @@
 
 - (UIImage *)applyBlurWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage didCancel:(BOOL (^)())didCancel
 {
+  NSLog(@"START BLUR");
   // Check pre-conditions.
   if (self.size.width < 1 || self.size.height < 1) {
     return nil;
@@ -170,6 +171,7 @@
         }
         
         if (didCancel()) {
+          NSLog(@"CANCEL BLUR");
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
           return nil;
@@ -178,6 +180,7 @@
         vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
 
         if (didCancel()) {
+          NSLog(@"CANCEL BLUR");
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
           return nil;
@@ -186,6 +189,7 @@
         vImageBoxConvolve_ARGB8888(&effectOutBuffer, &effectInBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
 
         if (didCancel()) {
+          NSLog(@"CANCEL BLUR");
           UIGraphicsEndImageContext();
           UIGraphicsEndImageContext();
           return nil;
@@ -195,6 +199,7 @@
       }
 
       if (didCancel()) {
+        NSLog(@"CANCEL BLUR");
         UIGraphicsEndImageContext();
         UIGraphicsEndImageContext();
         return nil;
@@ -264,6 +269,7 @@
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
+    NSLog(@"END BLUR");
     return outputImage;
   }
 }
