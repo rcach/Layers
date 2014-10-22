@@ -138,7 +138,7 @@ class RainforestCardCell: UICollectionViewCell {
       //MARK: Container Node Creation Section
       let containerNode = ASDisplayNode(layerClass: AnimatedContentsDisplayLayer.self)
       containerNode.layerBacked = true
-      containerNode.shouldRasterizeDescendants = false
+      containerNode.shouldRasterizeDescendants = true
       containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
       containerNode.borderWidth = 1
       
