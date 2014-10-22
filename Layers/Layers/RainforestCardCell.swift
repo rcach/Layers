@@ -132,12 +132,13 @@ class RainforestCardCell: UICollectionViewCell {
       descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
       
       let gradientNode = GradientNode()
+      gradientNode.opaque = false
       gradientNode.layerBacked = true
       
       //MARK: Container Node Creation Section
       let containerNode = ASDisplayNode(layerClass: AnimatedContentsDisplayLayer.self)
       containerNode.layerBacked = true
-      containerNode.shouldRasterizeDescendants = true
+      containerNode.shouldRasterizeDescendants = false
       containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
       containerNode.borderWidth = 1
       
