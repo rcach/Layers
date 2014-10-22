@@ -11,7 +11,7 @@ import Foundation
 extension NSAttributedString {
   class func attributedStringForTitleText(text: String) -> NSAttributedString {
     let titleAttributes =
-    [NSFontAttributeName: UIFont(name: "AvenirNext-Heavy", size: 30),
+    [NSFontAttributeName: UIFont(name: "AvenirNext-Heavy", size: 30)!,
       NSForegroundColorAttributeName: UIColor.whiteColor(),
       NSShadowAttributeName: NSShadow.titleTextShadow(),
       NSParagraphStyleAttributeName: NSParagraphStyle.justifiedParagraphStyle()]
@@ -20,7 +20,7 @@ extension NSAttributedString {
   
   class func attributedStringForDescriptionText(text: String) -> NSAttributedString {
     let descriptionAttributes =
-    [NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16),
+    [NSFontAttributeName: UIFont(name: "AvenirNext-Medium", size: 16)!,
       NSShadowAttributeName: NSShadow.descriptionTextShadow(),
       NSForegroundColorAttributeName: UIColor.whiteColor(),
       NSBackgroundColorAttributeName: UIColor.clearColor(),

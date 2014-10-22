@@ -33,7 +33,7 @@ class AttributionTableViewController: UITableViewController {
   func attributedTextWithTitle(title: String, link: String) -> NSAttributedString {
     let attributedText = NSMutableAttributedString(string: title)
     attributedText.addAttribute(NSLinkAttributeName, value: link, range: NSMakeRange(0, (title as NSString).length))
-    attributedText.addAttribute(NSFontAttributeName, value: UIFont(name: "AvenirNext-Medium", size: 16), range: NSMakeRange(0, (title as NSString).length))
+    attributedText.addAttribute(NSFontAttributeName, value: UIFont(name: "AvenirNext-Medium", size: 16)!, range: NSMakeRange(0, (title as NSString).length))
     return attributedText.copy() as NSAttributedString
   }
 }

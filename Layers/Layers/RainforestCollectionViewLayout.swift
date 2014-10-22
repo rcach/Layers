@@ -118,7 +118,7 @@ class RainforestCollectionViewLayout: UICollectionViewLayout {
     super.prepareLayout()
     if allLayoutAttributes.count == 0 {
       if let collectionView = self.collectionView {
-        if collectionView.frame.size.width < CGFloat((self.cellWidth * 2.0) + interCellHorizontalSpacing) {
+        if collectionView.frame.size.width < CGFloat((self.cellWidth * 2) + interCellHorizontalSpacing) {
           layoutType = .OneColumn
           layoutMetrics = layoutType.metrics()
         }

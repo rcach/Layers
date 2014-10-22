@@ -59,7 +59,7 @@ class RainforestCardCell: UICollectionViewCell {
   //MARK: Cell Content
   func configureCellDisplayWithCardInfo(cardInfo: RainforestCardInfo) {
     //MARK: Image Size Section
-    let image = UIImage(named: cardInfo.imageName)
+    let image = UIImage(named: cardInfo.imageName)!
     featureImageSizeOptional = image.size
     
     // Remove everything below this comment:
