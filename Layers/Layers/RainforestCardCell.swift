@@ -127,7 +127,8 @@ class RainforestCardCell: UICollectionViewCell {
         let descriptionTextNode = ASTextNode()
         descriptionTextNode.layerBacked = true
         descriptionTextNode.backgroundColor = UIColor.clearColor()
-        descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
+        descriptionTextNode.attributedString =
+          NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
         
         let gradientNode = GradientNode()
         gradientNode.opaque = false
@@ -149,13 +150,14 @@ class RainforestCardCell: UICollectionViewCell {
         
         //MARK: Node Layout Section
         containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
-        backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
+        backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(
+          containerBounds: containerNode.bounds)
         featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
           containerFrameWidth: containerNode.frame.size.width)
         titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
           featureImageFrame: featureImageNode.frame)
-        descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
-          featureImageFrame: featureImageNode.frame)
+        descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(
+          containerBounds: containerNode.bounds, featureImageFrame: featureImageNode.frame)
         gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
         
         if nodeConstructionOperation.cancelled {
