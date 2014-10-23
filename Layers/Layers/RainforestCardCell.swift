@@ -81,104 +81,105 @@ class RainforestCardCell: UICollectionViewCell {
       if nodeConstructionOperation.cancelled {
         return
       }
-      if self == nil {
-        return
-      }
       
-      let cell = self!
-      
-      //MARK: Node Creation Section
-      let backgroundImageNode = ASImageNode()
-      backgroundImageNode.image = image
-      backgroundImageNode.contentMode = .ScaleAspectFill
-      backgroundImageNode.layerBacked = true
-      backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] input in
-        if input == nil {
-          return input
-        }
-        let didCancelBlur: () -> Bool = {
-          var isCancelled = false
-          let isCancelledClosure = {
-            isCancelled = backgroundImageNode == nil || backgroundImageNode!.preventOrCancelDisplay
+      if let strongSelf = self {
+        //MARK: Node Creation Section
+        let backgroundImageNode = ASImageNode()
+        backgroundImageNode.image = image
+        backgroundImageNode.contentMode = .ScaleAspectFill
+        backgroundImageNode.layerBacked = true
+        backgroundImageNode.imageModificationBlock = { [weak backgroundImageNode] input in
+          if input == nil {
+            return input
           }
-          if NSThread.isMainThread() {
-            isCancelledClosure()
+          let didCancelBlur: () -> Bool = {
+            var isCancelled = true
+            if let strongBackgroundImageNode = backgroundImageNode {
+              let isCancelledClosure = {
+                isCancelled = strongBackgroundImageNode.preventOrCancelDisplay
+              }
+              if NSThread.isMainThread() {
+                isCancelledClosure()
+              } else {
+                dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
+              }
+            }
+            return isCancelled
+          }
+          if let blurredImage = input.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
+            saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
+              return blurredImage
           } else {
-            dispatch_sync(dispatch_get_main_queue(), isCancelledClosure)
+            return image
           }
-          return isCancelled
         }
-        if let blurredImage = input.applyBlurWithRadius(30, tintColor: UIColor(white: 0.5, alpha: 0.3),
-          saturationDeltaFactor: 1.8, maskImage: nil, didCancel:didCancelBlur) {
-            return blurredImage
-        } else {
-          return image
-        }
-      }
-      
-      let featureImageNode = ASImageNode()
-      featureImageNode.layerBacked = true
-      featureImageNode.contentMode = .ScaleAspectFit
-      featureImageNode.image = image
-      
-      let titleTextNode = ASTextNode()
-      titleTextNode.layerBacked = true
-      titleTextNode.backgroundColor = UIColor.clearColor()
-      titleTextNode.attributedString = NSAttributedString.attributedStringForTitleText(cardInfo.name)
-      
-      let descriptionTextNode = ASTextNode()
-      descriptionTextNode.layerBacked = true
-      descriptionTextNode.backgroundColor = UIColor.clearColor()
-      descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
-      
-      let gradientNode = GradientNode()
-      gradientNode.opaque = false
-      gradientNode.layerBacked = true
-      
-      //MARK: Container Node Creation Section
-      let containerNode = ASDisplayNode(layerClass: AnimatedContentsDisplayLayer.self)
-      containerNode.layerBacked = true
-      containerNode.shouldRasterizeDescendants = true
-      containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
-      containerNode.borderWidth = 1
-      
-      //MARK: Node Hierarchy Section
-      containerNode.addSubnode(backgroundImageNode)
-      containerNode.addSubnode(featureImageNode)
-      containerNode.addSubnode(gradientNode)
-      containerNode.addSubnode(titleTextNode)
-      containerNode.addSubnode(descriptionTextNode)
-      
-      //MARK: Node Layout Section
-      containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
-      backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
-      featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
-        containerFrameWidth: containerNode.frame.size.width)
-      titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
-        featureImageFrame: featureImageNode.frame)
-      descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
-        featureImageFrame: featureImageNode.frame)
-      gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
-      
-      if nodeConstructionOperation.cancelled {
-        return
-      }
-      
-      dispatch_async(dispatch_get_main_queue()) { [weak nodeConstructionOperation] in
-        if nodeConstructionOperation == nil || nodeConstructionOperation!.cancelled {
+        
+        let featureImageNode = ASImageNode()
+        featureImageNode.layerBacked = true
+        featureImageNode.contentMode = .ScaleAspectFit
+        featureImageNode.image = image
+        
+        let titleTextNode = ASTextNode()
+        titleTextNode.layerBacked = true
+        titleTextNode.backgroundColor = UIColor.clearColor()
+        titleTextNode.attributedString = NSAttributedString.attributedStringForTitleText(cardInfo.name)
+        
+        let descriptionTextNode = ASTextNode()
+        descriptionTextNode.layerBacked = true
+        descriptionTextNode.backgroundColor = UIColor.clearColor()
+        descriptionTextNode.attributedString = NSAttributedString.attributedStringForDescriptionText(cardInfo.description)
+        
+        let gradientNode = GradientNode()
+        gradientNode.opaque = false
+        gradientNode.layerBacked = true
+        
+        //MARK: Container Node Creation Section
+        let containerNode = ASDisplayNode(layerClass: AnimatedContentsDisplayLayer.self)
+        containerNode.layerBacked = true
+        containerNode.shouldRasterizeDescendants = true
+        containerNode.borderColor = UIColor(hue: 0, saturation: 0, brightness: 0.85, alpha: 0.2).CGColor
+        containerNode.borderWidth = 1
+        
+        //MARK: Node Hierarchy Section
+        containerNode.addSubnode(backgroundImageNode)
+        containerNode.addSubnode(featureImageNode)
+        containerNode.addSubnode(gradientNode)
+        containerNode.addSubnode(titleTextNode)
+        containerNode.addSubnode(descriptionTextNode)
+        
+        //MARK: Node Layout Section
+        containerNode.frame = FrameCalculator.frameForContainer(featureImageSize: image.size)
+        backgroundImageNode.frame = FrameCalculator.frameForBackgroundImage(containerBounds: containerNode.bounds)
+        featureImageNode.frame = FrameCalculator.frameForFeatureImage(featureImageSize: image.size,
+          containerFrameWidth: containerNode.frame.size.width)
+        titleTextNode.frame = FrameCalculator.frameForTitleText(containerBounds: containerNode.bounds,
+          featureImageFrame: featureImageNode.frame)
+        descriptionTextNode.frame = FrameCalculator.frameForDescriptionText(containerBounds: containerNode.bounds,
+          featureImageFrame: featureImageNode.frame)
+        gradientNode.frame = FrameCalculator.frameForGradient(featureImageFrame: featureImageNode.frame)
+        
+        if nodeConstructionOperation.cancelled {
           return
         }
-        if cell.nodeConstructionOperation !== nodeConstructionOperation! {
-          return
+        
+        dispatch_async(dispatch_get_main_queue()) { [weak nodeConstructionOperation] in
+          if let strongNodeConstructionOperation = nodeConstructionOperation {
+            if strongNodeConstructionOperation.cancelled {
+              return
+            }
+            if strongSelf.nodeConstructionOperation !== strongNodeConstructionOperation {
+              return
+            }
+            if containerNode.preventOrCancelDisplay {
+              return
+            }
+            //MARK: Node Layer and Wrap Up Section
+            strongSelf.contentView.layer.addSublayer(containerNode.layer)
+            containerNode.setNeedsDisplay()
+            strongSelf.contentLayer = containerNode.layer
+            strongSelf.containerNode = containerNode
+          }
         }
-        if containerNode.preventOrCancelDisplay {
-          return
-        }
-        //MARK: Node Layer and Wrap Up Section
-        cell.contentView.layer.addSublayer(containerNode.layer)
-        containerNode.setNeedsDisplay()
-        cell.contentLayer = containerNode.layer
-        cell.containerNode = containerNode
       }
     }
     return nodeConstructionOperation
